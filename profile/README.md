@@ -26,9 +26,11 @@ rewrites, and data layout to the same object boundary.
 
 MALT models relationships as explicit authenticated arcs. A MALT object can
 contain immutable payload data, authenticated outgoing arcs, a structure
-commitment, and verifiable path-to-reference mappings. Clients hold a trusted
-MALT root and verify references and proofs returned by untrusted gateways or
-storage services.
+commitment, and verifiable path-to-reference mappings. Technically, MALT
+encodes list and map relations as canonical cells and authenticates them with
+vector-commitment-style backends, producing compact proofs for the specific path
+or reference a client queried. Clients hold a trusted MALT root and verify
+references and proofs returned by untrusted gateways or storage services.
 
 MALT is not a blockchain and does not depend on one storage provider. It can run
 over IPFS, Filecoin, S3, local CAS implementations, or other object and

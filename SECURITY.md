@@ -10,7 +10,7 @@ tenant isolation, storage adapters, caching, or synchronization behavior.
 Do not report security vulnerabilities through public GitHub issues,
 Discussions, or pull requests.
 
-security contact: TODO
+security contact: vitalikzhou@gmail.com
 
 Until a dedicated security contact is published, please contact the maintainers
 through the most appropriate private channel available to you and include
