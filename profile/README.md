@@ -36,6 +36,10 @@ MALT is not a blockchain and does not depend on one storage provider. It can run
 over IPFS, Filecoin, S3, local CAS implementations, or other object and
 content-addressed storage backends.
 
+**Status:** MALT is an experimental reference implementation. It is runnable end
+to end, but its public APIs, ProofList schemas, wire formats, and deployment
+policies may change. It is not production-ready.
+
 ## Architecture
 
 ```mermaid
@@ -82,10 +86,10 @@ They are not linked until public repositories exist.
 
 ## Research and Evaluation
 
-MALT is developed as both a systems research project and an open-source
-implementation. The core repository contains benchmarks, evaluation workloads,
-and reproducibility artifacts for studying traversal latency, proof size, and
-rewrite amplification in authenticated object graphs.
+MALT is developed as both a systems research project and an experimental
+reference implementation. The core repository contains benchmarks, evaluation
+workloads, and reproducibility artifacts for studying traversal latency, proof
+size, and rewrite amplification in authenticated object graphs.
 
 We avoid claiming production readiness, audit status, deployment scale, or
 performance numbers unless they are backed by the current repositories.
