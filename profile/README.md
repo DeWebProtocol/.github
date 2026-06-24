@@ -105,9 +105,10 @@ They are not linked until public repositories exist.
 ## Documentation Ownership
 
 The `malt` repository owns implementation-bound specifications, schemas, wire
-formats, API behavior, test vectors, and evaluation documentation. `malt-web`
-owns conceptual explanations, tutorials, product narratives, and user-facing
-documentation. We do not maintain a separate `malt-docs` repository today.
+formats, API behavior, test vectors, evaluation documentation, and MIPs under
+`docs/mips`. `malt-web` owns conceptual explanations, tutorials, product
+narratives, and user-facing documentation. We do not maintain a separate
+`malt-docs` repository today.
 
 ## Getting Started
 
