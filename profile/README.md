@@ -24,13 +24,13 @@ references directly inside object content. That works well for immutable
 objects, but it couples traversal, proof generation, reference updates, object
 rewrites, and data layout to the same object boundary.
 
-MALT models relationships as explicit authenticated arcs. A MALT object can
-contain immutable payload data, authenticated outgoing arcs, a structure
-commitment, and verifiable path-to-reference mappings. Technically, MALT
-encodes list and map relations as canonical cells and authenticates them with
-vector-commitment-style backends, producing compact proofs for the specific path
-or reference a client queried. Clients hold a trusted MALT root and verify
-references and proofs returned by untrusted gateways or storage services.
+MALT keeps payloads as ordinary immutable content-addressed objects and
+authenticates the mutable relationships among them using typed list/map roots
+and verifier-facing proofs. Technically, MALT encodes list and map relations as
+canonical cells and authenticates them with vector-commitment-style backends,
+producing compact proofs for the specific path or reference a client queried.
+Clients hold a trusted MALT root and verify references and proofs returned by
+untrusted gateways, storage services, caches, or materialized indexes.
 
 MALT is not a blockchain and does not depend on one storage provider. It can run
 over IPFS, Filecoin, S3, local CAS implementations, or other object and
@@ -40,38 +40,74 @@ content-addressed storage backends.
 to end, but its public APIs, ProofList schemas, wire formats, and deployment
 policies may change. It is not production-ready.
 
-## Architecture
+## What Works Today
+
+The current [`malt`](https://github.com/DeWebProtocol/malt) repository provides
+an end-to-end experimental reference implementation:
+
+- authenticated list and map semantics
+- root-relative add, resolve, verify, and writer-mutation workflows
+- a local daemon and reference command-line client
+- proof-bearing HTTP reads for files, directories, and byte ranges
+- immutable payload storage through external CAS backends
+- KZG and IPA commitment backends
+- overwrite and versioned ArcTable modes
+- UnixFS-style application layouts
+- reproducible evaluation workloads for traversal, proof overhead, storage
+  overhead, and rewrite amplification
+
+## Current Reference Implementation
 
 ```mermaid
 flowchart TB
-  fs["Local Filesystem"] --> cli["malt-cli<br/>Filesystem client"]
-  app["Application Objects"] --> ts["malt-ts<br/>TypeScript SDK"]
-  cli --> api["MALT Cloud API"]
-  ts --> api
-  api --> gateway["malt-gateway<br/>MALT Cloud"]
-  gateway --> core["malt<br/>MALT Core"]
-  core --> s3["S3"]
-  core --> ipfs["IPFS / Filecoin"]
-  core --> local["Local CAS"]
+  app["Applications / reference CLI / Go client"] --> api["MALT daemon and HTTP API"]
+  api --> rw["Resolver / Writer"]
+  rw --> semantics["Authenticated list / map semantics"]
+  semantics --> proofs["ProofList and commitment backends"]
+  semantics --> arctable["ArcTable materialization"]
+  rw --> cas["External CAS / IPFS / local CAS"]
 ```
 
-`malt-cli` and `malt-ts` are peer clients. Both are intended to produce,
-upload, retrieve, and verify MALT data. `malt-gateway` is the planned hosted
-MALT Cloud backend. `malt` is the protocol and reference implementation that
-defines the shared semantics used by clients and services.
+The current `malt` core repository includes a reference CLI and local daemon.
+The planned standalone `malt-cli` repository will evolve this reference surface
+into a filesystem-oriented client and synchronization runtime.
+
+## Planned Product Architecture
+
+```mermaid
+flowchart TB
+  cli["malt-cli"] --> gateway["malt-gateway / MALT Cloud"]
+  ts["malt-ts"] --> gateway
+  other["other SDKs"] --> gateway
+  gateway --> core["malt core"]
+  core --> filecoin["Filecoin / IPFS"]
+  core --> s3["S3"]
+  core --> local["local CAS"]
+```
+
+`malt-gateway`, standalone `malt-cli`, and `malt-ts` are planned product
+surfaces. They are listed to describe the intended project structure, not to
+claim that those repositories are currently usable.
 
 ## Repositories
 
 | Repository | Role | Status |
 | --- | --- | --- |
-| [`malt`](https://github.com/DeWebProtocol/malt) | Core protocol, reference implementation, benchmarks, and evaluation | Active |
-| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website and documentation site | Active |
+| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, reference implementation, CLI/daemon reference surface, benchmarks, and evaluation | Experimental reference implementation |
+| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, conceptual documentation, and user-facing design narrative | Active |
 | `malt-gateway` | Multi-tenant MALT Cloud backend for storing, resolving, and serving MALT objects | Planned |
-| `malt-cli` | Filesystem-oriented MALT client, local daemon, and synchronization runtime | Planned |
+| `malt-cli` | Standalone filesystem client, local runtime, and synchronization bridge | Planned |
 | `malt-ts` | TypeScript SDK for persistent and verifiable application objects | Planned |
 
 The planned repositories are listed to describe the intended project structure.
 They are not linked until public repositories exist.
+
+## Documentation Ownership
+
+The `malt` repository owns implementation-bound specifications, schemas, wire
+formats, API behavior, test vectors, and evaluation documentation. `malt-web`
+owns conceptual explanations, tutorials, product narratives, and user-facing
+documentation. We do not maintain a separate `malt-docs` repository today.
 
 ## Getting Started
 
