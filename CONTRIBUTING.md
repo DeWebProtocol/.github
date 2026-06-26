@@ -12,9 +12,13 @@ that focus clear and should distinguish implemented behavior from future plans.
   benchmarks, evaluation workloads, and reproducibility artifacts.
 - Use [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web) for
   the public website and documentation site.
-- Planned cloud, filesystem client, and SDK work may later move into
-  `malt-gateway`, `malt-cli`, or `malt-ts`. Until those repositories exist,
-  discuss cross-cutting design work in the most relevant existing repository.
+- Use [`dewebprotocol/gateway`](https://github.com/DeWebProtocol/gateway) for
+  managed gateway service behavior, tenants, identity, authorization, root
+  publication, backend orchestration, cache policy, S3/Filecoin/IPFS integration,
+  and product-level end-to-end tests.
+- Planned filesystem client and SDK work may later move into `malt-cli` or
+  `malt-ts`. Until those repositories exist, discuss cross-cutting design work
+  in the most relevant existing repository.
 
 If you are unsure where a change belongs, open a short design issue before
 starting implementation.
@@ -40,7 +44,7 @@ A useful bug report should include:
 - the actual behavior, including logs or error messages;
 - a minimal reproduction when possible;
 - whether the issue affects proof verification, serialization, CID handling,
-  storage adapters, authentication, or tenant isolation.
+  storage adapters, authentication, tenant isolation, or gateway policy.
 
 ## Feature Proposals
 

@@ -11,12 +11,15 @@ searchable, and actionable for the project.
   [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
 - Public website and documentation site:
   [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web)
+- Managed gateway service behavior, tenants, identity, authorization, backend
+  orchestration, S3/Filecoin/IPFS integration, and product end-to-end tests:
+  [`dewebprotocol/gateway`](https://github.com/DeWebProtocol/gateway)
 - Organization profile, community files, and repository routing:
   [`dewebprotocol/.github`](https://github.com/DeWebProtocol/.github)
 
-Planned repositories such as `malt-gateway`, `malt-cli`, and `malt-ts` are not
-linked until public repositories exist. Until then, use the existing repository
-that most closely matches the topic.
+Planned repositories such as `malt-cli` and `malt-ts` are not linked until
+public repositories exist. Until then, use the existing repository that most
+closely matches the topic.
 
 ## Bugs
 

@@ -69,15 +69,17 @@ flowchart TB
   rw --> cas["External CAS / IPFS / local CAS"]
 ```
 
-The current `malt` core repository includes a reference CLI and local daemon.
-The planned standalone `malt-cli` repository will evolve this reference surface
-into a filesystem-oriented client and synchronization runtime.
+The current `malt` core repository includes a reference CLI, local daemon, and
+evaluation gateway surface. The separate `gateway` repository owns managed
+service integration. The planned standalone `malt-cli` repository will evolve
+the local client surface into a filesystem-oriented client and synchronization
+runtime.
 
 ## Planned Product Architecture
 
 ```mermaid
 flowchart TB
-  cli["malt-cli"] --> gateway["malt-gateway / MALT Cloud"]
+  cli["malt-cli"] --> gateway["gateway / MALT Cloud"]
   ts["malt-ts"] --> gateway
   other["other SDKs"] --> gateway
   gateway --> core["malt core"]
@@ -86,30 +88,30 @@ flowchart TB
   core --> local["local CAS"]
 ```
 
-`malt-gateway`, standalone `malt-cli`, and `malt-ts` are planned product
-surfaces. They are listed to describe the intended project structure, not to
-claim that those repositories are currently usable.
+`gateway` is the managed service repository. Standalone `malt-cli` and
+`malt-ts` are still planned product surfaces.
 
 ## Repositories
 
 | Repository | Role | Status |
 | --- | --- | --- |
-| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, reference implementation, CLI/daemon reference surface, benchmarks, and evaluation | Experimental reference implementation |
+| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, reference implementation, CLI/daemon/eval-gateway surface, benchmarks, and evaluation | Experimental reference implementation |
 | [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, conceptual documentation, and user-facing design narrative | Active |
-| `malt-gateway` | Multi-tenant MALT Cloud backend for storing, resolving, and serving MALT objects | Planned |
+| [`gateway`](https://github.com/DeWebProtocol/gateway) | Managed MALT gateway backend for tenants, identity, authorization, backend orchestration, and product e2e tests | Early service skeleton |
 | `malt-cli` | Standalone filesystem client, local runtime, and synchronization bridge | Planned |
 | `malt-ts` | TypeScript SDK for persistent and verifiable application objects | Planned |
 
-The planned repositories are listed to describe the intended project structure.
-They are not linked until public repositories exist.
+Planned repositories are listed to describe the intended project structure.
 
 ## Documentation Ownership
 
 The `malt` repository owns implementation-bound specifications, schemas, wire
 formats, API behavior, test vectors, evaluation documentation, and MIPs under
-`docs/mips`. `malt-web` owns conceptual explanations, tutorials, product
-narratives, and user-facing documentation. We do not maintain a separate
-`malt-docs` repository today.
+`docs/mips`. `gateway` owns managed service behavior: tenants, identity,
+authorization, backend orchestration, root publication, cache policy, and
+deployment concerns. `malt-web` owns conceptual explanations, tutorials,
+product narratives, and user-facing documentation. We do not maintain a
+separate `malt-docs` repository today.
 
 ## Getting Started
 
@@ -117,7 +119,8 @@ narratives, and user-facing documentation. We do not maintain a separate
   artifact, start with [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt).
 - To read the public website and documentation source, see
   [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web).
-- To build a hosted service, follow the planned `malt-gateway` work.
+- To build a hosted service, follow
+  [`dewebprotocol/gateway`](https://github.com/DeWebProtocol/gateway).
 - To synchronize local files, follow the planned `malt-cli` work.
 - To define verifiable application objects in TypeScript, follow the planned
   `malt-ts` work.
