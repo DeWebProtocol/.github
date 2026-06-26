@@ -10,12 +10,11 @@ tenant isolation, storage adapters, caching, or synchronization behavior.
 Do not report security vulnerabilities through public GitHub issues,
 Discussions, or pull requests.
 
-security contact: vitalikzhou@gmail.com
+Current security contact: vitalikzhou@gmail.com
 
-Until a dedicated security contact is published, please contact the maintainers
-through the most appropriate private channel available to you and include
-`SECURITY` in the subject or opening line. Maintainers should replace the TODO
-above before announcing a public vulnerability-reporting process.
+Please contact the maintainers privately and include `SECURITY` in the subject
+or opening line. If a repository enables GitHub private vulnerability reporting,
+that repository-specific reporting channel can also be used.
 
 ## What to Include
 

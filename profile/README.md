@@ -15,9 +15,10 @@ be replaced without losing data integrity or structure.
 
 ## MALT
 
-MALT, the **Mutable Arc Layer**, is DeWebProtocol's current core project. It
-defines persistent object graphs whose content and authenticated relationships
-can be independently stored, resolved, updated, and verified.
+MALT is DeWebProtocol's current core project. It defines an authenticated graph
+semantic layer over immutable content-addressed payloads, so object content and
+authenticated relationships can be independently stored, resolved, updated, and
+verified.
 
 Traditional content-addressed storage and Merkle DAG systems often embed object
 references directly inside object content. That works well for immutable
