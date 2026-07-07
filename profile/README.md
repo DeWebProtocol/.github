@@ -15,23 +15,31 @@ be replaced without losing data integrity or structure.
 
 ## MALT
 
-MALT is DeWebProtocol's current core project. It defines an authenticated graph
-semantic layer over immutable content-addressed payloads, so object content and
-authenticated relationships can be independently stored, resolved, updated, and
-verified.
+MALT is DeWebProtocol's current core project: a Merkle-DAG alternative for
+authenticating mutable application data. It keeps payloads in ordinary
+content-addressed storage while authenticating relationships, paths, and
+updates from independent structure roots.
 
 Traditional content-addressed storage and Merkle DAG systems often embed object
 references directly inside object content. That works well for immutable
 objects, but it couples traversal, proof generation, reference updates, object
-rewrites, and data layout to the same object boundary.
+rewrites, and data layout to the same object boundary. To verify a path, a
+client usually needs the linked object chain itself as proof material.
 
 MALT keeps payloads as ordinary immutable content-addressed objects and
 authenticates the mutable relationships among them using typed list/map roots
-and verifier-facing proofs. Technically, MALT encodes list and map relations as
-canonical cells and authenticates them with vector-commitment-style backends,
-producing compact proofs for the specific path or reference a client queried.
-Clients hold a trusted MALT root and verify references and proofs returned by
-untrusted gateways, storage services, caches, or materialized indexes.
+and verifier-facing proofs. Flat `root + path` lookups can return dedicated,
+fixed-size proof material for each semantic lookup instead of requiring the
+Merkle-DAG traversal chain. Content reads can use normal HTTP(S) response bodies
+and carry verification evidence in `X-Malt-ProofList`, so clients verify
+`root + path -> result` without trusting gateways, storage services, caches, or
+materialized indexes.
+
+Technically, MALT encodes list and map relations as canonical cells and
+authenticates them with vector-commitment-style backends, producing compact
+proofs for the specific path or reference a client queried. Clients hold a
+trusted MALT root and verify references and proofs returned by untrusted
+infrastructure.
 
 MALT is not a blockchain and does not depend on one storage provider. It can run
 over IPFS, Filecoin, S3, local CAS implementations, or other object and
@@ -49,7 +57,8 @@ an end-to-end experimental reference implementation:
 - authenticated list and map semantics
 - root-relative add, resolve, verify, and writer-mutation workflows
 - a local daemon and reference command-line client
-- proof-bearing HTTP reads for files, directories, and byte ranges
+- HTTP-native content reads with `X-Malt-ProofList` proof headers
+- fixed-size proof material for flat `root + path` semantic lookups
 - immutable payload storage through external CAS backends
 - KZG and IPA commitment backends
 - overwrite and versioned ArcTable modes
