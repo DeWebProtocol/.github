@@ -37,7 +37,7 @@ engage in unacceptable behavior.
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the maintainers.
 
-Maintainer contact: TODO
+Maintainer contact: [security@deweb.world](mailto:security@deweb.world)
 
 Reports will be reviewed as promptly as practical. Maintainers should respect
 the privacy and safety of the reporter.

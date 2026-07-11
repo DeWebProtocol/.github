@@ -10,7 +10,7 @@ tenant isolation, storage adapters, caching, or synchronization behavior.
 Do not report security vulnerabilities through public GitHub issues,
 Discussions, or pull requests.
 
-Current security contact: vitalikzhou@gmail.com
+Current security contact: [security@deweb.world](mailto:security@deweb.world)
 
 Please contact the maintainers privately and include `SECURITY` in the subject
 or opening line. If a repository enables GitHub private vulnerability reporting,

@@ -12,10 +12,13 @@ that focus clear and should distinguish implemented behavior from future plans.
   benchmarks, evaluation workloads, and reproducibility artifacts.
 - Use [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web) for
   the public website and documentation site.
-- Use [`dewebprotocol/gateway`](https://github.com/DeWebProtocol/gateway) for
-  managed gateway service behavior, tenants, identity, authorization, root
-  publication, backend orchestration, cache policy, S3/Filecoin/IPFS integration,
-  and product-level end-to-end tests.
+- Managed gateway service behavior, tenants, identity, authorization, root
+  publication, backend orchestration, cache policy, S3/Filecoin/IPFS
+  integration, and product-level end-to-end tests belong to the private
+  `gateway` service skeleton. Start with MALT's public
+  [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary);
+  contributors without private access can open a scoped design issue in
+  `dewebprotocol/malt` for routing.
 - Planned filesystem client and SDK work may later move into `malt-cli` or
   `malt-ts`. Until those repositories exist, discuss cross-cutting design work
   in the most relevant existing repository.
