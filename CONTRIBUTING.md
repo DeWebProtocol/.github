@@ -15,7 +15,8 @@ that focus clear and should distinguish implemented behavior from future plans.
 - Managed gateway service behavior, tenants, identity, authorization, root
   publication, backend orchestration, cache policy, S3/Filecoin/IPFS
   integration, and product-level end-to-end tests belong to the private
-  `gateway` service skeleton. Start with MALT's public
+  `gateway` service. It currently pins MALT v0.0.4 and owns the profiled
+  artifact/content product integration. Start with MALT's public
   [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary);
   contributors without private access can open a scoped design issue in
   `dewebprotocol/malt` for routing.

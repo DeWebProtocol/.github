@@ -13,7 +13,7 @@ searchable, and actionable for the project.
   [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web)
 - Managed gateway service behavior, tenants, identity, authorization, backend
   orchestration, S3/Filecoin/IPFS integration, and product end-to-end tests:
-  the private `gateway` service skeleton. If you do not have access, use MALT's
+  the private `gateway` service. If you do not have access, use MALT's
   public [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary)
   to choose the closest public issue location.
 - Organization profile, community files, and repository routing:

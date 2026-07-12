@@ -18,8 +18,9 @@ be replaced without losing data integrity or structure.
 MALT is DeWebProtocol's current core project: a general, arc-granularity graph
 data-authentication system and an alternative to Merkle-DAG authentication for
 mutable application data. Its experimental
-[`v0.0.3`](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.3) source
-release packages the portable authentication core for external consumers.
+[`v0.0.4`](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.4) source
+release packages canonical segment paths and profiled resolve/prove/verify
+artifacts for external consumers.
 
 MALT separates three concerns that implicit Merkle-DAG arcs couple together:
 
@@ -45,6 +46,11 @@ response bodies and carry verification evidence in `X-Malt-ProofList`, so
 clients verify `trusted root + typed query -> result` without trusting
 gateways, storage services, caches, or materialized indexes.
 
+Clients submit canonical segment arrays without discovering how each graph root
+groups a long path into arcs. The reference resolver may prefer the longest
+prefix, while verification proves one complete returned derivation without
+claiming that it was unique or globally longest.
+
 Technically, MALT encodes list and map relations as canonical cells and
 authenticates them with vector-commitment-style backends, producing compact
 proofs for the specific path or reference a client queried. Clients hold a
@@ -55,7 +61,7 @@ MALT is not a blockchain and does not depend on one storage provider. It can run
 over IPFS, Filecoin, S3, local CAS implementations, or other object and
 content-addressed storage backends.
 
-**Status:** `v0.0.3` is an experimental source release. MALT is runnable end to
+**Status:** `v0.0.4` is an experimental source release. MALT is runnable end to
 end, but its public APIs, ProofList schemas, wire formats, and deployment
 policies may change. It is not production-ready or an audited managed service.
 
@@ -66,6 +72,9 @@ an end-to-end experimental reference implementation:
 
 - authenticated list and map semantics
 - a module-root `malt` facade for typed reads, mutations, and verification
+- an unversioned `artifact` package with the explicit
+  `malt.artifact/v0alpha2` resolve/prove/verify profile and JSON Schemas
+- canonical segment arrays and proof-carrying multi-arc composition
 - a portable `auth/verifier` kernel that does not require ArcTable, CAS,
   runtime, layout, server, daemon, or network state
 - root-relative add, resolve, verify, and writer-mutation workflows
@@ -95,12 +104,13 @@ flowchart TB
 ```
 
 The current `malt` core repository includes a reference CLI, local daemon, and
-evaluation gateway surface. A separate private `gateway` service skeleton owns
-managed service integration and independently orchestrates MALT core and CAS.
+evaluation surface. The separate private `gateway` service pins MALT v0.0.4,
+proxies the profiled artifact API, streams the UnixFS product scenario, and is
+used by the public web App. Managed identity and production policy remain work.
 The planned standalone `malt-cli` repository will evolve the local client
 surface into a filesystem-oriented client and synchronization runtime.
 
-## Planned Product Architecture
+## Product Architecture
 
 ```mermaid
 flowchart TB
@@ -113,16 +123,16 @@ flowchart TB
   gateway --> local["local CAS"]
 ```
 
-`gateway` is the managed service repository. Standalone `malt-cli` and
+`gateway` is the active managed service repository. Standalone `malt-cli` and
 `malt-ts` are still planned product surfaces.
 
 ## Repositories
 
 | Repository | Role | Status |
 | --- | --- | --- |
-| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, portable verifier, reference implementation, CLI/daemon/eval-gateway surface, benchmarks, and evaluation | Experimental `v0.0.3` source release |
-| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, conceptual documentation, and user-facing design narrative | Active |
-| `gateway` | Private managed MALT gateway skeleton for tenants, identity, authorization, backend orchestration, and product e2e tests | Early private service skeleton |
+| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, portable verifier, artifact schemas, reference implementation, CLI/daemon, benchmarks, and evaluation | Experimental `v0.0.4` source release |
+| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, gateway-backed browser App, conceptual documentation, and user-facing design narrative | Active |
+| [`gateway`](https://github.com/DeWebProtocol/gateway) | Private managed gateway boundary, v0.0.4 daemon adapter, artifact API, UnixFS content streaming, and product e2e tests | Runnable local product; production policy incomplete |
 | `malt-cli` | Standalone filesystem client, local runtime, and synchronization bridge | Planned |
 | `malt-ts` | TypeScript SDK for persistent and verifiable application objects | Planned |
 
@@ -142,12 +152,13 @@ separate `malt-docs` repository today.
 
 - To understand the protocol, object model, proof semantics, and research
   artifact, start with [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
-  and the [`v0.0.3` release notes](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.3).
+  and the [`v0.0.4` release notes](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.4).
 - To read the public website and documentation source, see
   [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web).
-- To design a hosted service, start with MALT's public
+- To run or design a hosted service, start with MALT's public
   [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary).
-  The managed `gateway` skeleton is currently private.
+  The managed `gateway` repository is private but now provides the working
+  local artifact/content path used by `malt-web`.
 - To synchronize local files, follow the planned `malt-cli` work.
 - To define verifiable application objects in TypeScript, follow the planned
   `malt-ts` work.
