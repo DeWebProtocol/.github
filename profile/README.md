@@ -103,8 +103,9 @@ end-to-end experimental reference implementation:
 
 PR #163 at head `d3598cd` proposes, but has not released:
 
-- module-root resolve/read values and `VerifyResolve`/`VerifyRead`, with portable write values in
-  `mutation` and untrusted read/apply execution in `execution.Executor`
+- module-root resolve/read values and `VerifyResolve`/`VerifyRead`, with
+  portable write values in `mutation` and untrusted resolve/read/apply
+  execution in `execution.Executor`
 - transport-neutral `malt.resolve/v0alpha1` and `malt.read/v0alpha1`
   request/result/verification values and JSON Schemas under `protocol`
 - separate UnixFS ownership under `model/unixfs`, `sdk/unixfs`, and
