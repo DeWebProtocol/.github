@@ -69,7 +69,7 @@ policies may change. It is not production-ready or an audited managed service.
 
 **Active draft:**
 [`malt` PR #163](https://github.com/DeWebProtocol/malt/pull/163), current head
-`db271e725dc0f4a21a7263eff92a14292c6590de`, proposes a tighter
+`d3598cdb6e5d8bb7ab535a48a3e9912fc4b6cce6`, proposes a tighter
 client/gateway/core boundary. It is not merged or released. The repository's
 released baseline remains v0.0.4; the package/process split and local-verifier
 surfaces in the draft must not be treated as v0.0.4 APIs.
@@ -101,7 +101,7 @@ end-to-end experimental reference implementation:
 
 ## Active Draft Target
 
-PR #163 at head `db271e7` proposes, but has not released:
+PR #163 at head `d3598cd` proposes, but has not released:
 
 - module-root resolve/read values and `VerifyResolve`/`VerifyRead`, with portable write values in
   `mutation` and untrusted read/apply execution in `execution.Executor`
@@ -122,7 +122,7 @@ contract into the released v0.0.4 baseline.
 ```mermaid
 flowchart TB
   app["Applications / clients"] --> gateway["Gateway"]
-  gateway --> executor["MALT executor: resolve / prove / apply"]
+  gateway --> executor["MALT executor: resolve / read / apply"]
   executor --> core["MALT core resolve / read / mutation contracts"]
   gateway --> cas["CAS: immutable payload bytes"]
   executor --> vc["VC commitments and ProofList production"]
