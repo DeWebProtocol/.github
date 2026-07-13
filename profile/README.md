@@ -18,9 +18,11 @@ be replaced without losing data integrity or structure.
 MALT is DeWebProtocol's current core project: a general, arc-granularity graph
 data-authentication system and an alternative to Merkle-DAG authentication for
 mutable application data. Its experimental
-[`v0.0.4`](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.4) source
-release packages canonical segment paths and the frozen
-`malt.artifact/v0alpha2` resolve/prove compatibility profile.
+[`v0.0.5`](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.5) source
+release packages operation-specific resolve/read contracts, client-local
+verification, and an untrusted resolve/read/apply execution boundary. The
+v0.0.4 `malt.artifact/v0alpha2` resolve/prove profile remains frozen
+compatibility behavior.
 
 MALT separates three concerns that implicit Merkle-DAG arcs couple together:
 
@@ -63,16 +65,12 @@ MALT is not a blockchain and does not depend on one storage provider. It can run
 over IPFS, Filecoin, S3, local CAS implementations, or other object and
 content-addressed storage backends.
 
-**Status:** `v0.0.4` is an experimental source release. MALT is runnable end to
+**Status:** `v0.0.5` is an experimental source release. MALT is runnable end to
 end, but its public APIs, ProofList schemas, wire formats, and deployment
 policies may change. It is not production-ready or an audited managed service.
 
-**Active draft:**
-[`malt` PR #163](https://github.com/DeWebProtocol/malt/pull/163), current head
-`d3598cdb6e5d8bb7ab535a48a3e9912fc4b6cce6`, proposes a tighter
-client/gateway/core boundary. It is not merged or released. The repository's
-released baseline remains v0.0.4; the package/process split and local-verifier
-surfaces in the draft must not be treated as v0.0.4 APIs.
+The v0.0.5 release finalizes MIP-1013 and the client/gateway/core package split
+implemented by PR #163. Public APIs remain pre-v1 and experimental.
 
 ## Released v0.0.4 Baseline
 
@@ -99,9 +97,9 @@ end-to-end experimental reference implementation:
 - reproducible evaluation workloads for traversal, proof overhead, storage
   overhead, and rewrite amplification
 
-## Active Draft Target
+## Released v0.0.5 Boundary
 
-PR #163 at head `d3598cd` proposes, but has not released:
+MALT v0.0.5 releases:
 
 - module-root resolve/read values and `VerifyResolve`/`VerifyRead`, with
   portable write values in `mutation` and untrusted resolve/read/apply
@@ -114,9 +112,8 @@ PR #163 at head `d3598cd` proposes, but has not released:
 - caller-request/untrusted-result local verification through `sdk/verifier`, a
   browser/WASM export, and a local CLI path
 
-The gateway and public Web repositories contain integration-preview work aimed
-at this draft. That preview does not promote the draft packages or verifier
-contract into the released v0.0.4 baseline.
+The gateway pins the v0.0.5 Go module, and the public Web repository verifies
+resolve/read results locally with a WASM build sourced from the release commit.
 
 ## Reference Architecture
 
@@ -135,8 +132,7 @@ flowchart TB
 ```
 
 The system design uses a reference CLI, an untrusted executor, and an evaluation
-surface around the portable core. In released v0.0.4, those runtime pieces have
-the older combined package/process layout. PR #163 proposes the explicit
+surface around the portable core. v0.0.5 provides the explicit
 `reference/executor` package and caller-bound local verifier. The separate
 private `gateway` service owns the managed execution boundary and serves the
 operation-specific resolve/read API and UnixFS product scenario used by the
@@ -167,9 +163,9 @@ flowchart TB
 
 | Repository | Role | Status |
 | --- | --- | --- |
-| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, portable verifier, resolve/read schemas, frozen artifact compatibility, UnixFS application, runtime/CLI, benchmarks, and evaluation | Experimental `v0.0.4` release; PR #163 package split is an unmerged draft |
-| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, gateway-backed browser App, conceptual documentation, and user-facing design narrative | Active integration preview; local verifier targets unmerged PR #163 |
-| [`gateway`](https://github.com/DeWebProtocol/gateway) | Private managed gateway boundary with separate executor, diagnostic resolve/read verification, and UnixFS application capabilities over the PR #163 integration pin | Runnable local product; production policy incomplete |
+| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, portable verifier, resolve/read schemas, frozen artifact compatibility, UnixFS application, runtime/CLI, benchmarks, and evaluation | Experimental `v0.0.5` source release |
+| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, gateway-backed browser App, conceptual documentation, and user-facing design narrative | v0.0.5 integration with client-local verifier |
+| [`gateway`](https://github.com/DeWebProtocol/gateway) | Private managed gateway boundary with separate executor, diagnostic resolve/read verification, and UnixFS application capabilities | Pins v0.0.5; runnable local product; production policy incomplete |
 | `malt-cli` | Standalone filesystem client, local runtime, and synchronization bridge | Planned |
 | `malt-ts` | TypeScript SDK for persistent and verifiable application objects | Planned |
 
@@ -189,7 +185,7 @@ separate `malt-docs` repository today.
 
 - To understand the protocol, object model, proof semantics, and research
   artifact, start with [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
-  and the [`v0.0.4` release notes](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.4).
+  and the [`v0.0.5` release notes](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.5).
 - To read the public website and documentation source, see
   [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web).
 - To run or design a hosted service, start with MALT's public
