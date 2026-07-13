@@ -43,10 +43,10 @@ application model such as UnixFS may require it as its own invariant. Flat
 `root + path` lookups
 can return dedicated proof material for each semantic lookup instead of
 requiring the Merkle-DAG traversal chain. Content reads can use normal HTTP(S)
-response bodies and carry verification evidence in `X-Malt-ProofList`, so
-clients verify `trusted root + caller-selected operation/query -> result`
-locally without trusting
-gateways, storage services, caches, or materialized indexes.
+response bodies and carry verification evidence in `X-Malt-ProofList`. In the
+target trust model, clients verify
+`trusted root + caller-selected operation/query -> result` locally without
+trusting gateways, storage services, caches, or materialized indexes.
 
 Clients submit canonical segment arrays without discovering how each graph root
 groups a long path into arcs. The reference resolver may prefer the longest
@@ -67,36 +67,55 @@ content-addressed storage backends.
 end, but its public APIs, ProofList schemas, wire formats, and deployment
 policies may change. It is not production-ready or an audited managed service.
 
-## What Works Today
+**Active draft:**
+[`malt` PR #163](https://github.com/DeWebProtocol/malt/pull/163), reviewed at
+`0f2b5b1494232e6e5d38a0cffc0710b40dea7566`, proposes a tighter
+client/gateway/core boundary. It is not merged or released. The repository's
+released baseline remains v0.0.4; the package/process split and local-verifier
+surfaces in the draft must not be treated as v0.0.4 APIs.
 
-The current [`malt`](https://github.com/DeWebProtocol/malt) repository provides
-an end-to-end experimental reference implementation:
+## Released v0.0.4 Baseline
+
+The [`malt`](https://github.com/DeWebProtocol/malt) v0.0.4 release provides an
+end-to-end experimental reference implementation:
 
 - authenticated list and map semantics
-- module-root typed query/read values and portable verification, plus separate
-  mutation contracts and an untrusted execution facade
-- an unversioned `artifact` package with the explicit
+- module-root typed read/apply/verify values through the combined experimental
+  `Engine` facade
+- an `artifact` package with the explicit
   `malt.artifact/v0alpha2` resolve/prove/verify profile and JSON Schemas
 - canonical segment arrays and proof-carrying multi-arc composition
 - a portable `auth/verifier` kernel that does not require ArcTable, CAS,
-  runtime, application adapters, servers, executors, or network state
+  runtime, application adapters, servers, or network state
 - root-relative add, resolve, verify, and writer-mutation workflows
-- a local reference executor and command-line client
+- a local runtime process and command-line client
 - HTTP-native content reads with `X-Malt-ProofList` proof headers
 - fixed-size proof material for flat `root + path` semantic lookups
 - immutable payload storage through external CAS backends
 - KZG and IPA commitment backends
 - overwrite and versioned ArcTable modes
-- a UnixFS application model/profile over the general core;
-  `flat`/`hierarchical` are its materialization strategies, and
-  [draft PR #163](https://github.com/DeWebProtocol/malt/pull/163) separates
-  model, client-SDK, and reference-runtime packages
-- a client-local Go/WASM verifier envelope that independently binds trusted
-  root, expected operation/query, and an optional expected target
+- a UnixFS application implementation under the released `layout/unixfs`
+  package; `flat`/`hierarchical` name its materialization strategies
 - reproducible evaluation workloads for traversal, proof overhead, storage
   overhead, and rewrite amplification
 
-## Current Reference Implementation
+## Active Draft Target
+
+PR #163 at reviewed head `0f2b5b1` proposes, but has not released:
+
+- module-root query/read values and `VerifyRead`, with portable write values in
+  `mutation` and untrusted read/apply execution in `execution.Executor`
+- separate UnixFS ownership under `model/unixfs`, `sdk/unixfs`, and
+  `runtime/unixfs`
+- an all-in-one development/conformance backend under `reference/executor`
+- caller-expectation-bound local verification through `sdk/verifier`, a
+  browser/WASM export, and a local CLI path
+
+The gateway and public Web repositories contain integration-preview work aimed
+at this draft. That preview does not promote the draft packages or verifier
+contract into the released v0.0.4 baseline.
+
+## Reference Architecture
 
 ```mermaid
 flowchart TB
@@ -112,14 +131,14 @@ flowchart TB
   root["Caller-trusted root + typed query"] --> verifier
 ```
 
-The current `malt` repository includes the portable core plus a reference CLI,
-reference executor, and evaluation surface. That executor is not a client
-daemon: it composes ArcTable, semantic runtimes, CAS access, and HTTP for
-development and conformance. The separate private `gateway` service owns the
-managed execution boundary and serves the profiled artifact API and UnixFS
-product scenario used by the public web App. A gateway `/verify` response is
-diagnostic only; clients make trust decisions with local portable verification.
-Managed identity and production policy remain work.
+The system design uses a reference CLI, an untrusted executor, and an evaluation
+surface around the portable core. In released v0.0.4, those runtime pieces have
+the older combined package/process layout. PR #163 proposes the explicit
+`reference/executor` package and caller-bound local verifier. The separate
+private `gateway` service owns the managed execution boundary and serves the
+profiled artifact API and UnixFS product scenario used by the public Web App.
+Its `/verify` response is diagnostic only. Managed identity and production
+policy remain work.
 The planned standalone `malt-cli` repository will evolve the local client
 surface into a filesystem-oriented client and synchronization runtime.
 
@@ -144,8 +163,8 @@ flowchart TB
 
 | Repository | Role | Status |
 | --- | --- | --- |
-| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, portable verifier, artifact schemas, UnixFS application adapters, reference executor/CLI, benchmarks, and evaluation | Experimental `v0.0.4` source release |
-| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, gateway-backed browser App, conceptual documentation, and user-facing design narrative | Active |
+| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, portable verifier, artifact schemas, UnixFS application, runtime/CLI, benchmarks, and evaluation | Experimental `v0.0.4` release; PR #163 package split is an unmerged draft |
+| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, gateway-backed browser App, conceptual documentation, and user-facing design narrative | Active integration preview; local verifier targets unmerged PR #163 |
 | [`gateway`](https://github.com/DeWebProtocol/gateway) | Private managed gateway boundary with separate executor, diagnostic verification, and UnixFS application capabilities over the v0.0.4 remote-executor adapter | Runnable local product; production policy incomplete |
 | `malt-cli` | Standalone filesystem client, local runtime, and synchronization bridge | Planned |
 | `malt-ts` | TypeScript SDK for persistent and verifiable application objects | Planned |
