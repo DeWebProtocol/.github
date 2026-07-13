@@ -44,7 +44,8 @@ application model such as UnixFS may require it as its own invariant. Flat
 can return dedicated proof material for each semantic lookup instead of
 requiring the Merkle-DAG traversal chain. Content reads can use normal HTTP(S)
 response bodies and carry verification evidence in `X-Malt-ProofList`, so
-clients verify `trusted root + typed query -> result` locally without trusting
+clients verify `trusted root + caller-selected operation/query -> result`
+locally without trusting
 gateways, storage services, caches, or materialized indexes.
 
 Clients submit canonical segment arrays without discovering how each graph root
@@ -78,17 +79,20 @@ an end-to-end experimental reference implementation:
   `malt.artifact/v0alpha2` resolve/prove/verify profile and JSON Schemas
 - canonical segment arrays and proof-carrying multi-arc composition
 - a portable `auth/verifier` kernel that does not require ArcTable, CAS,
-  runtime, layout, server, daemon, or network state
+  runtime, application adapters, servers, executors, or network state
 - root-relative add, resolve, verify, and writer-mutation workflows
-- a local reference-executor daemon and command-line client
+- a local reference executor and command-line client
 - HTTP-native content reads with `X-Malt-ProofList` proof headers
 - fixed-size proof material for flat `root + path` semantic lookups
 - immutable payload storage through external CAS backends
 - KZG and IPA commitment backends
 - overwrite and versioned ArcTable modes
 - a UnixFS application model/profile over the general core;
-  `flat`/`hierarchical` are its layout strategies, and an active refactor is
-  separating model, client-SDK, and reference-runtime packages
+  `flat`/`hierarchical` are its materialization strategies, and
+  [draft PR #163](https://github.com/DeWebProtocol/malt/pull/163) separates
+  model, client-SDK, and reference-runtime packages
+- a client-local Go/WASM verifier envelope that independently binds trusted
+  root, expected operation/query, and an optional expected target
 - reproducible evaluation workloads for traversal, proof overhead, storage
   overhead, and rewrite amplification
 
@@ -109,7 +113,7 @@ flowchart TB
 ```
 
 The current `malt` repository includes the portable core plus a reference CLI,
-reference-executor daemon, and evaluation surface. The daemon is not a client
+reference executor, and evaluation surface. That executor is not a client
 daemon: it composes ArcTable, semantic runtimes, CAS access, and HTTP for
 development and conformance. The separate private `gateway` service owns the
 managed execution boundary and serves the profiled artifact API and UnixFS
