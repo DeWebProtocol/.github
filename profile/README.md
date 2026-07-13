@@ -26,8 +26,8 @@ MALT separates three concerns that implicit Merkle-DAG arcs couple together:
 
 - immutable payload bytes remain in ordinary content-addressed storage (CAS);
 - typed arcs are authenticated by vector-commitment (VC) backends; and
-- traversal, indexing, caching, gateways, and other execution/access state stay
-  outside the verifier trust boundary.
+- traversal, indexing, caching, gateways, executors, and other execution/access
+  state stay outside the verifier trust boundary.
 
 Traditional content-addressed storage and Merkle DAG systems often embed object
 references directly inside object content. That works well for immutable
@@ -38,12 +38,13 @@ client usually needs the linked object chain itself as proof material.
 MALT keeps payloads as ordinary immutable content-addressed objects and
 authenticates the mutable relationships among them using typed list/map roots
 and verifier-facing proofs. Generic maps can also be relation-only: the
-standard `@payload` coordinate is optional at the core level, while a layout
-such as UnixFS may require it as its own invariant. Flat `root + path` lookups
+standard `@payload` coordinate is optional at the core level, while an
+application model such as UnixFS may require it as its own invariant. Flat
+`root + path` lookups
 can return dedicated proof material for each semantic lookup instead of
 requiring the Merkle-DAG traversal chain. Content reads can use normal HTTP(S)
 response bodies and carry verification evidence in `X-Malt-ProofList`, so
-clients verify `trusted root + typed query -> result` without trusting
+clients verify `trusted root + typed query -> result` locally without trusting
 gateways, storage services, caches, or materialized indexes.
 
 Clients submit canonical segment arrays without discovering how each graph root
@@ -71,20 +72,23 @@ The current [`malt`](https://github.com/DeWebProtocol/malt) repository provides
 an end-to-end experimental reference implementation:
 
 - authenticated list and map semantics
-- a module-root `malt` facade for typed reads, mutations, and verification
+- module-root typed query/read values and portable verification, plus separate
+  mutation contracts and an untrusted execution facade
 - an unversioned `artifact` package with the explicit
   `malt.artifact/v0alpha2` resolve/prove/verify profile and JSON Schemas
 - canonical segment arrays and proof-carrying multi-arc composition
 - a portable `auth/verifier` kernel that does not require ArcTable, CAS,
   runtime, layout, server, daemon, or network state
 - root-relative add, resolve, verify, and writer-mutation workflows
-- a local daemon and reference command-line client
+- a local reference-executor daemon and command-line client
 - HTTP-native content reads with `X-Malt-ProofList` proof headers
 - fixed-size proof material for flat `root + path` semantic lookups
 - immutable payload storage through external CAS backends
 - KZG and IPA commitment backends
 - overwrite and versioned ArcTable modes
-- UnixFS-style application layouts as one application of the general core
+- a UnixFS application model/profile over the general core;
+  `flat`/`hierarchical` are its layout strategies, and an active refactor is
+  separating model, client-SDK, and reference-runtime packages
 - reproducible evaluation workloads for traversal, proof overhead, storage
   overhead, and rewrite amplification
 
@@ -92,21 +96,26 @@ an end-to-end experimental reference implementation:
 
 ```mermaid
 flowchart TB
-  app["Applications / clients"] --> gateway["Gateway or local execution adapter"]
-  gateway --> core["MALT root facade: typed arc reads and mutations"]
+  app["Applications / clients"] --> gateway["Gateway"]
+  gateway --> executor["MALT executor: resolve / prove / apply"]
+  executor --> core["MALT core contracts"]
   gateway --> cas["CAS: immutable payload bytes"]
-  core --> vc["VC commitments and ProofList production"]
-  core --> materialized["ArcTable / indexes / caches: untrusted execution state"]
+  executor --> vc["VC commitments and ProofList production"]
+  executor --> materialized["ArcTable / indexes / caches: untrusted execution state"]
   gateway --> response["Result + ProofList + optional payload"]
   cas --> response
-  response --> verifier["Portable auth/verifier"]
+  response --> verifier["Client-local portable verifier"]
   root["Caller-trusted root + typed query"] --> verifier
 ```
 
-The current `malt` core repository includes a reference CLI, local daemon, and
-evaluation surface. The separate private `gateway` service pins MALT v0.0.4,
-proxies the profiled artifact API, streams the UnixFS product scenario, and is
-used by the public web App. Managed identity and production policy remain work.
+The current `malt` repository includes the portable core plus a reference CLI,
+reference-executor daemon, and evaluation surface. The daemon is not a client
+daemon: it composes ArcTable, semantic runtimes, CAS access, and HTTP for
+development and conformance. The separate private `gateway` service owns the
+managed execution boundary and serves the profiled artifact API and UnixFS
+product scenario used by the public web App. A gateway `/verify` response is
+diagnostic only; clients make trust decisions with local portable verification.
+Managed identity and production policy remain work.
 The planned standalone `malt-cli` repository will evolve the local client
 surface into a filesystem-oriented client and synchronization runtime.
 
@@ -114,10 +123,11 @@ surface into a filesystem-oriented client and synchronization runtime.
 
 ```mermaid
 flowchart TB
-  cli["malt-cli"] --> gateway["gateway / MALT Cloud"]
-  ts["malt-ts"] --> gateway
+  cli["malt-cli: UnixFS client"] --> gateway["gateway / MALT Cloud"]
+  ts["malt-ts: object client SDK"] --> gateway
   other["other SDKs"] --> gateway
-  gateway --> core["malt core: arc authentication"]
+  gateway --> executor["executor: ArcTable + resolve/prove/apply"]
+  executor --> core["malt core: contracts + portable verification"]
   gateway --> filecoin["Filecoin / IPFS payload CAS"]
   gateway --> s3["S3 payload storage"]
   gateway --> local["local CAS"]
@@ -130,9 +140,9 @@ flowchart TB
 
 | Repository | Role | Status |
 | --- | --- | --- |
-| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, portable verifier, artifact schemas, reference implementation, CLI/daemon, benchmarks, and evaluation | Experimental `v0.0.4` source release |
+| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, portable verifier, artifact schemas, UnixFS application adapters, reference executor/CLI, benchmarks, and evaluation | Experimental `v0.0.4` source release |
 | [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, gateway-backed browser App, conceptual documentation, and user-facing design narrative | Active |
-| [`gateway`](https://github.com/DeWebProtocol/gateway) | Private managed gateway boundary, v0.0.4 daemon adapter, artifact API, UnixFS content streaming, and product e2e tests | Runnable local product; production policy incomplete |
+| [`gateway`](https://github.com/DeWebProtocol/gateway) | Private managed gateway boundary with separate executor, diagnostic verification, and UnixFS application capabilities over the v0.0.4 remote-executor adapter | Runnable local product; production policy incomplete |
 | `malt-cli` | Standalone filesystem client, local runtime, and synchronization bridge | Planned |
 | `malt-ts` | TypeScript SDK for persistent and verifiable application objects | Planned |
 
