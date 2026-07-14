@@ -41,7 +41,6 @@ flowchart TB
   gateway --> result["result + ProofList + CAS bytes"]
   result --> local["client-local Go / WASM verification"]
   trusted["caller-selected trusted root"] --> local
-  evaluation["malt-evaluation: frozen v0.0.5 + migrating suites"] -. suite migration .-> gateway
 ```
 
 ### Core SDK
@@ -73,16 +72,6 @@ ProofList verification, and payload-byte binding. It also provides
 IPFS-compatible Merkle DAG UnixFS import as a distinct compatibility target.
 That path returns a DAG CID, not a MALT root or ProofList. The client currently
 tracks core v0.0.6 and intentionally has no release tag yet.
-
-### Evaluation
-
-[`DeWebProtocol/malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
-owns reproducible benchmark runners, comparison adapters, schemas, plans, and
-research-grade result generation. The migrated historical runner intentionally
-pins MALT v0.0.5 because it depends on the reference runtime and storage
-adapters removed from the SDK-only core. Current v0.0.6 product correctness is
-covered by gateway-owned CAS-to-gateway-to-client E2E tests; benchmark suites
-migrate to that boundary separately.
 
 ### Browser client
 
@@ -130,7 +119,6 @@ operations while reusing core schemas and verification semantics.
 | [`gateway`](https://github.com/DeWebProtocol/gateway) | ArcTable/KV/CAS materialization, generic HTTP service, managed-service boundary | Pins v0.0.6; product hardening ongoing |
 | [`malt-client`](https://github.com/DeWebProtocol/malt-client) | Trusted native CLI/daemon, MALT-authenticated UnixFS, Merkle DAG UnixFS compatibility import | Public initial implementation; no tag yet |
 | [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Browser client, public website, tutorials, conceptual docs | v0.0.6 generic gateway/WASM integration |
-| [`malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation) | Reproducible benchmark runners, comparison adapters, plans, schemas, results | Historical runner pins v0.0.5; v0.0.6 migration ongoing |
 
 ## Status
 
@@ -149,8 +137,6 @@ suites to the v0.0.6 gateway/client boundary.
 - Normative protocol, schema, proof, CID, compatibility, and MIP documentation:
   [`malt/docs`](https://github.com/DeWebProtocol/malt/tree/main/docs)
 - Gateway service behavior: [`gateway`](https://github.com/DeWebProtocol/gateway)
-- Evaluation runners and research artifacts:
-  [`malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
 - Public explanation and tutorials: [`malt-web`](https://github.com/DeWebProtocol/malt-web)
 
 Security issues should not be reported through public issues. See
