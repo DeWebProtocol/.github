@@ -12,7 +12,13 @@ that focus clear and should distinguish implemented behavior from future plans.
   implementation-bound MIPs.
 - Use [`dewebprotocol/malt-client`](https://github.com/DeWebProtocol/malt-client)
   for native CLI/daemon, trusted-root policy, UnixFS application behavior,
-  gateway transport, and client payload verification.
+  gateway transport, client payload verification, and IPFS-compatible Merkle
+  DAG UnixFS import.
+- Use [`dewebprotocol/malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
+  for benchmark runners, comparison adapters, evaluation schemas/plans,
+  reproducibility tooling, and research-grade result generation. Its historical
+  runner intentionally pins MALT v0.0.5; current v0.0.6 product E2E belongs to
+  `gateway`.
 - Use [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web) for
   the public website and documentation site.
 - Managed gateway service behavior, tenants, identity, authorization, root

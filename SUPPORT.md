@@ -6,12 +6,16 @@ searchable, and actionable for the project.
 
 ## Where to Ask
 
-- Protocol behavior, object model, explicit arcs, proofs, verification,
-  benchmarks, evaluation, and core implementation:
+- Protocol behavior, object model, explicit arcs, proofs, verification, and
+  core implementation:
   [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
+- Benchmark runners, comparison adapters, evaluation plans, reproducibility,
+  and research results:
+  [`dewebprotocol/malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
 - Public website and documentation site:
   [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web)
-- Native CLI/daemon, trusted roots, UnixFS, and client payload verification:
+- Native CLI/daemon, trusted roots, MALT-authenticated UnixFS, IPFS-compatible
+  Merkle DAG UnixFS import, and client payload verification:
   [`dewebprotocol/malt-client`](https://github.com/DeWebProtocol/malt-client)
 - Managed gateway service behavior, tenants, identity, authorization, backend
   orchestration, S3/Filecoin/IPFS integration, and product end-to-end tests:

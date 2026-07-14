@@ -34,13 +34,14 @@ live over Filecoin/IPFS, S3, local CAS, or other immutable storage backends.
 
 ```mermaid
 flowchart TB
-  native["malt-client: CLI / daemon / UnixFS"] --> gateway["gateway: HTTP + ArcTable + KV + CAS"]
+  native["malt-client: CLI / daemon / MALT + Merkle DAG UnixFS"] --> gateway["gateway: HTTP + ArcTable + KV + CAS"]
   web["malt-web: browser client"] --> gateway
   future["future malt-ts / application clients"] --> gateway
   gateway --> core["malt v0.0.6 SDK core"]
   gateway --> result["result + ProofList + CAS bytes"]
   result --> local["client-local Go / WASM verification"]
   trusted["caller-selected trusted root"] --> local
+  evaluation["malt-evaluation: frozen v0.0.5 + migrating suites"] -. suite migration .-> gateway
 ```
 
 ### Core SDK
@@ -68,8 +69,20 @@ verification.
 [`DeWebProtocol/malt-client`](https://github.com/DeWebProtocol/malt-client) is
 the public trusted CLI and local daemon application. It owns accepted/candidate
 root policy, gateway transport, UnixFS paths/manifests/materialization, local
-ProofList verification, and payload-byte binding. It currently tracks core
-v0.0.6 and intentionally has no release tag yet.
+ProofList verification, and payload-byte binding. It also provides
+IPFS-compatible Merkle DAG UnixFS import as a distinct compatibility target.
+That path returns a DAG CID, not a MALT root or ProofList. The client currently
+tracks core v0.0.6 and intentionally has no release tag yet.
+
+### Evaluation
+
+[`DeWebProtocol/malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
+owns reproducible benchmark runners, comparison adapters, schemas, plans, and
+research-grade result generation. The migrated historical runner intentionally
+pins MALT v0.0.5 because it depends on the reference runtime and storage
+adapters removed from the SDK-only core. Current v0.0.6 product correctness is
+covered by gateway-owned CAS-to-gateway-to-client E2E tests; benchmark suites
+migrate to that boundary separately.
 
 ### Browser client
 
@@ -99,7 +112,11 @@ the core authentication semantics.
 
 UnixFS is one client application over generic map/list/CAS composition, not a
 core layout. `/` parsing, manifests, file chunk/range behavior, and
-`flat`/`hierarchical` materialization strategies belong to clients.
+materialization strategy belong to clients. The native client currently
+exposes one `hybrid` MALT layout: each directory is an authenticated map root
+while ancestor maps retain descendant root-relative path bindings. Pure `flat`
+and `hierarchical` remain possible future strategies rather than current CLI
+values.
 
 Future TypeScript object support will follow the same rule: `malt-ts` will map
 JavaScript/TypeScript application objects into segment arrays and semantic
@@ -111,8 +128,9 @@ operations while reusing core schemas and verification semantics.
 |---|---|---|
 | [`malt`](https://github.com/DeWebProtocol/malt) | SDK-only authentication core, normative contracts, schemas, MIPs, verifier | Experimental `v0.0.6` |
 | [`gateway`](https://github.com/DeWebProtocol/gateway) | ArcTable/KV/CAS materialization, generic HTTP service, managed-service boundary | Pins v0.0.6; product hardening ongoing |
-| [`malt-client`](https://github.com/DeWebProtocol/malt-client) | Trusted native CLI/daemon and UnixFS client | Public initial implementation; no tag yet |
+| [`malt-client`](https://github.com/DeWebProtocol/malt-client) | Trusted native CLI/daemon, MALT-authenticated UnixFS, Merkle DAG UnixFS compatibility import | Public initial implementation; no tag yet |
 | [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Browser client, public website, tutorials, conceptual docs | v0.0.6 generic gateway/WASM integration |
+| [`malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation) | Reproducible benchmark runners, comparison adapters, plans, schemas, results | Historical runner pins v0.0.5; v0.0.6 migration ongoing |
 
 ## Status
 
@@ -121,15 +139,18 @@ validated path includes core test/vet/build, gateway and client test/vet/build,
 browser tests/build, local WASM provenance, and a local
 CAS -> gateway -> trusted-client candidate/accept/resolve smoke.
 
-Next priorities are language-neutral conformance vectors, a maintained product
-E2E suite, mutation transition semantics, native client packaging, a future
-TypeScript client, and paper-grade evaluation outside SDK core.
+Next priorities are language-neutral conformance vectors, a maintained
+gateway-owned product E2E suite, mutation transition semantics, native client
+packaging, a future TypeScript client, and incremental migration of evaluation
+suites to the v0.0.6 gateway/client boundary.
 
 ## Documentation
 
 - Normative protocol, schema, proof, CID, compatibility, and MIP documentation:
   [`malt/docs`](https://github.com/DeWebProtocol/malt/tree/main/docs)
 - Gateway service behavior: [`gateway`](https://github.com/DeWebProtocol/gateway)
+- Evaluation runners and research artifacts:
+  [`malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
 - Public explanation and tutorials: [`malt-web`](https://github.com/DeWebProtocol/malt-web)
 
 Security issues should not be reported through public issues. See
