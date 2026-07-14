@@ -59,9 +59,10 @@ how an ArcTable is stored.
 
 [`DeWebProtocol/gateway`](https://github.com/DeWebProtocol/gateway) embeds the
 untrusted core executor and owns persistent ArcTable/KV/CAS, generic
-resolve/read/root/mutation/CAS routes, HTTP policy, and future managed-service
-integrations. Diagnostic `/verify` endpoints never replace client-local
-verification.
+resolve/read/root/mutation/CAS routes, HTTP policy, and managed-service
+integration. Its runtime now composes separate native MALT, CAS, and Merkle DAG
+compatibility profiles per scope. Named-root publication is separate policy
+metadata and never replaces caller-selected roots or client-local verification.
 
 ### Native client
 
@@ -71,7 +72,11 @@ root policy, gateway transport, UnixFS paths/manifests/materialization, local
 ProofList verification, and payload-byte binding. It also provides
 IPFS-compatible Merkle DAG UnixFS import as a distinct compatibility target.
 That path returns a DAG CID, not a MALT root or ProofList. The client currently
-tracks core v0.0.6 and intentionally has no release tag yet.
+tracks core v0.0.6 and intentionally has no release tag yet. The active
+[boundary refactor PR #3](https://github.com/DeWebProtocol/malt-client/pull/3)
+separates untrusted transport, accepted-root policy, UnixFS behavior, and
+Merkle DAG compatibility into independently reviewable packages; those package
+paths are not described as merged until that PR lands.
 
 ### Browser client
 
@@ -117,7 +122,7 @@ operations while reusing core schemas and verification semantics.
 |---|---|---|
 | [`malt`](https://github.com/DeWebProtocol/malt) | SDK-only authentication core, normative contracts, schemas, MIPs, verifier | Experimental `v0.0.6` |
 | [`gateway`](https://github.com/DeWebProtocol/gateway) | ArcTable/KV/CAS materialization, generic HTTP service, managed-service boundary | Pins v0.0.6; product hardening ongoing |
-| [`malt-client`](https://github.com/DeWebProtocol/malt-client) | Trusted native CLI/daemon, MALT-authenticated UnixFS, Merkle DAG UnixFS compatibility import | Public initial implementation; no tag yet |
+| [`malt-client`](https://github.com/DeWebProtocol/malt-client) | Trusted native CLI/daemon, MALT-authenticated UnixFS, Merkle DAG UnixFS compatibility import | No tag; boundary refactor is draft PR #3 |
 | [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Browser client, public website, tutorials, conceptual docs | v0.0.6 generic gateway/WASM integration |
 
 ## Status
@@ -127,10 +132,10 @@ validated path includes core test/vet/build, gateway and client test/vet/build,
 browser tests/build, local WASM provenance, and a local
 CAS -> gateway -> trusted-client candidate/accept/resolve smoke.
 
-Next priorities are language-neutral conformance vectors, a maintained
-gateway-owned product E2E suite, mutation transition semantics, native client
-packaging, a future TypeScript client, and incremental migration of evaluation
-suites to the v0.0.6 gateway/client boundary.
+The immediate integration work is to review the client boundary update and
+[core-boundary documentation PR #168](https://github.com/DeWebProtocol/malt/pull/168).
+After those land, priorities are language-neutral conformance vectors, mutation
+transition semantics, native client packaging, and a future TypeScript client.
 
 ## Documentation
 
