@@ -8,21 +8,23 @@ that focus clear and should distinguish implemented behavior from future plans.
 
 - Use [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt) for protocol
   semantics, MALT objects, explicit arcs, structure commitments, path encoding,
-  CIDs, multicodecs, commitment backends, CAS interfaces, proofs, verification,
-  benchmarks, evaluation workloads, and reproducibility artifacts.
+  CIDs, multicodecs, commitment backends, proofs, verification, schemas, and
+  implementation-bound MIPs.
+- Use [`dewebprotocol/malt-client`](https://github.com/DeWebProtocol/malt-client)
+  for native CLI/daemon, trusted-root policy, UnixFS application behavior,
+  gateway transport, and client payload verification.
 - Use [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web) for
   the public website and documentation site.
 - Managed gateway service behavior, tenants, identity, authorization, root
   publication, backend orchestration, cache policy, S3/Filecoin/IPFS
   integration, and product-level end-to-end tests belong to the private
-  `gateway` service. Its current integration pins MALT v0.0.5 and owns the
-  operation-specific resolve/read/content product integration. Start with MALT's public
+  `gateway` service. Its current integration pins MALT v0.0.6 and owns the
+  generic resolve/read/root/CAS product integration. Start with MALT's public
   [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary);
   contributors without private access can open a scoped design issue in
   `dewebprotocol/malt` for routing.
-- Planned filesystem client and SDK work may later move into `malt-cli` or
-  `malt-ts`. Until those repositories exist, discuss cross-cutting design work
-  in the most relevant existing repository.
+- TypeScript client/SDK work remains planned as `malt-ts`; discuss its
+  cross-language contract work in `malt` until that repository exists.
 
 If you are unsure where a change belongs, open a short design issue before
 starting implementation.

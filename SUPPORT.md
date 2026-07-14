@@ -11,6 +11,8 @@ searchable, and actionable for the project.
   [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
 - Public website and documentation site:
   [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web)
+- Native CLI/daemon, trusted roots, UnixFS, and client payload verification:
+  [`dewebprotocol/malt-client`](https://github.com/DeWebProtocol/malt-client)
 - Managed gateway service behavior, tenants, identity, authorization, backend
   orchestration, S3/Filecoin/IPFS integration, and product end-to-end tests:
   the private `gateway` service. If you do not have access, use MALT's
@@ -19,9 +21,8 @@ searchable, and actionable for the project.
 - Organization profile, community files, and repository routing:
   [`dewebprotocol/.github`](https://github.com/DeWebProtocol/.github)
 
-Planned repositories such as `malt-cli` and `malt-ts` are not linked until
-public repositories exist. Until then, use the existing repository that most
-closely matches the topic.
+The future `malt-ts` repository is not linked until it exists. Until then, use
+`malt` for cross-language protocol/schema questions.
 
 ## Bugs
 

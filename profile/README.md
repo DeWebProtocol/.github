@@ -1,221 +1,137 @@
 # DeWebProtocol
 
-**User-owned data infrastructure for the AI era.**
+**User-owned, verifiable data infrastructure for the AI era.**
 
 DeWebProtocol builds infrastructure for Personal Online Datastores: data stores
 that users can hold, move, verify, and authorize across applications and storage
-providers. In many cloud and AI systems today, user data lives inside
-platform-controlled databases and object stores. Users can usually access it
-only through platform APIs, and the structure connecting objects can disappear
-when a service goes away.
-
-Our long-term goal is an open and verifiable data layer where users own their
-data, applications operate on user-controlled objects, and storage providers can
-be replaced without losing data integrity or structure.
+providers. Our goal is an open data layer where applications can use
+user-controlled objects without making one platform database the permanent
+authority for data integrity or structure.
 
 ## MALT
 
-MALT is DeWebProtocol's current core project: a general, arc-granularity graph
-data-authentication system and an alternative to Merkle-DAG authentication for
-mutable application data. Its experimental
-[`v0.0.5`](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.5) source
-release packages operation-specific resolve/read contracts, client-local
-verification, and an untrusted resolve/read/apply execution boundary. The
-v0.0.4 `malt.artifact/v0alpha2` resolve/prove profile remains frozen
-compatibility behavior.
+MALT is a general, arc-granularity graph data-authentication system and an
+alternative to implicit Merkle-DAG authentication for evolving application
+data. The current experimental core release is
+[`v0.0.6`](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.6).
 
-MALT separates three concerns that implicit Merkle-DAG arcs couple together:
+MALT separates three concerns:
 
-- immutable payload bytes remain in ordinary content-addressed storage (CAS);
-- typed arcs are authenticated by vector-commitment (VC) backends; and
-- traversal, indexing, caching, gateways, executors, and other execution/access
-  state stay outside the verifier trust boundary.
+- immutable payload bytes remain in content-addressed storage (CAS);
+- typed arcs are authenticated by vector-commitment backends; and
+- ArcTable, KV, CAS, gateways, caches, and proof generation stay outside the
+  client's correctness trust boundary.
 
-Traditional content-addressed storage and Merkle DAG systems often embed object
-references directly inside object content. That works well for immutable
-objects, but it couples traversal, proof generation, reference updates, object
-rewrites, and data layout to the same object boundary. To verify a path, a
-client usually needs the linked object chain itself as proof material.
+Clients select a trusted root, send canonical segment arrays or typed queries,
+receive `result + ProofList`, and verify locally. A resolver may return any
+valid complete derivation; verification intentionally does not claim that the
+path was longest or unique.
 
-MALT keeps payloads as ordinary immutable content-addressed objects and
-authenticates the mutable relationships among them using typed list/map roots
-and verifier-facing proofs. Generic maps can also be relation-only: the
-standard `@payload` coordinate is optional at the core level, while an
-application model such as UnixFS may require it as its own invariant. Flat
-`root + path` lookups
-can return dedicated proof material for each semantic lookup instead of
-requiring the Merkle-DAG traversal chain. Content reads can use normal HTTP(S)
-response bodies and carry verification evidence in `X-Malt-ProofList`. In the
-target trust model, clients verify
-caller-selected resolve/read requests against untrusted results locally without
-trusting gateways, storage services, caches, or materialized indexes.
+MALT is not a blockchain and is not tied to one storage provider. Payloads can
+live over Filecoin/IPFS, S3, local CAS, or other immutable storage backends.
 
-Clients submit canonical segment arrays without discovering how each graph root
-groups a long path into arcs. The reference resolver may prefer the longest
-prefix, while verification proves one complete returned derivation without
-claiming that it was unique or globally longest.
-
-Technically, MALT encodes list and map relations as canonical cells and
-authenticates them with vector-commitment-style backends, producing compact
-proofs for the specific path or reference a client queried. Clients hold a
-trusted MALT root and verify references and proofs returned by untrusted
-infrastructure.
-
-MALT is not a blockchain and does not depend on one storage provider. It can run
-over IPFS, Filecoin, S3, local CAS implementations, or other object and
-content-addressed storage backends.
-
-**Status:** `v0.0.5` is an experimental source release. MALT is runnable end to
-end, but its public APIs, ProofList schemas, wire formats, and deployment
-policies may change. It is not production-ready or an audited managed service.
-
-The v0.0.5 release finalizes MIP-1013 and the client/gateway/core package split
-implemented by PR #163. Public APIs remain pre-v1 and experimental.
-
-## Released v0.0.4 Baseline
-
-The [`malt`](https://github.com/DeWebProtocol/malt) v0.0.4 release provides an
-end-to-end experimental reference implementation:
-
-- authenticated list and map semantics
-- module-root typed read/apply/verify values through the combined experimental
-  `Engine` facade
-- an `artifact` package with the explicit
-  frozen `malt.artifact/v0alpha2` resolve/prove compatibility profile and JSON Schemas
-- canonical segment arrays and proof-carrying multi-arc composition
-- a portable `auth/verifier` kernel that does not require ArcTable, CAS,
-  runtime, application adapters, servers, or network state
-- root-relative add, resolve, verify, and writer-mutation workflows
-- a local runtime process and command-line client
-- HTTP-native content reads with `X-Malt-ProofList` proof headers
-- fixed-size proof material for flat `root + path` semantic lookups
-- immutable payload storage through external CAS backends
-- KZG and IPA commitment backends
-- overwrite and versioned ArcTable modes
-- a UnixFS application implementation under the released `layout/unixfs`
-  package; `flat`/`hierarchical` name its materialization strategies
-- reproducible evaluation workloads for traversal, proof overhead, storage
-  overhead, and rewrite amplification
-
-## Released v0.0.5 Boundary
-
-MALT v0.0.5 releases:
-
-- module-root resolve/read values and `VerifyResolve`/`VerifyRead`, with
-  portable write values in `mutation` and untrusted resolve/read/apply
-  execution in `execution.Executor`
-- transport-neutral `malt.resolve/v0alpha1` and `malt.read/v0alpha1`
-  request/result/verification values and JSON Schemas under `protocol`
-- separate UnixFS ownership under `model/unixfs`, `sdk/unixfs`, and
-  `runtime/unixfs`
-- an all-in-one development/conformance backend under `reference/executor`
-- caller-request/untrusted-result local verification through `sdk/verifier`, a
-  browser/WASM export, and a local CLI path
-
-The gateway pins the v0.0.5 Go module, and the public Web repository verifies
-resolve/read results locally with a WASM build sourced from the release commit.
-
-## Reference Architecture
+## Current Architecture
 
 ```mermaid
 flowchart TB
-  app["Applications / clients"] --> gateway["Gateway"]
-  gateway --> executor["MALT executor: resolve / read / apply"]
-  executor --> core["MALT core resolve / read / mutation contracts"]
-  gateway --> cas["CAS: immutable payload bytes"]
-  executor --> vc["VC commitments and ProofList production"]
-  executor --> materialized["ArcTable / indexes / caches: untrusted execution state"]
-  gateway --> response["Result + ProofList + optional payload"]
-  cas --> response
-  response --> verifier["Client-local portable verifier"]
-  root["Caller-selected resolve / read request"] --> verifier
+  native["malt-client: CLI / daemon / UnixFS"] --> gateway["gateway: HTTP + ArcTable + KV + CAS"]
+  web["malt-web: browser client"] --> gateway
+  future["future malt-ts / application clients"] --> gateway
+  gateway --> core["malt v0.0.6 SDK core"]
+  gateway --> result["result + ProofList + CAS bytes"]
+  result --> local["client-local Go / WASM verification"]
+  trusted["caller-selected trusted root"] --> local
 ```
 
-The system design uses a reference CLI, an untrusted executor, and an evaluation
-surface around the portable core. v0.0.5 provides the explicit
-`reference/executor` package and caller-bound local verifier. The separate
-private `gateway` service owns the managed execution boundary and serves the
-operation-specific resolve/read API and UnixFS product scenario used by the
-public Web App.
-Its `/verify` response is diagnostic only. Managed identity and production
-policy remain work.
-The planned standalone `malt-cli` repository will evolve the local client
-surface into a filesystem-oriented client and synchronization runtime.
+### Core SDK
 
-## Product Architecture
+[`DeWebProtocol/malt`](https://github.com/DeWebProtocol/malt) owns canonical
+graph/root/CID values, resolve/read/mutation contracts and schemas, commitment
+backends, map/list algorithms, ProofLists, generic execution composition, and
+local Go/WASM verification.
 
-```mermaid
-flowchart TB
-  cli["malt-cli: UnixFS client"] --> gateway["gateway / MALT Cloud"]
-  ts["malt-ts: object client SDK"] --> gateway
-  other["other SDKs"] --> gateway
-  gateway --> executor["executor: ArcTable + resolve/read/apply"]
-  executor --> core["malt core: contracts + portable verification"]
-  gateway --> filecoin["Filecoin / IPFS payload CAS"]
-  gateway --> s3["S3 payload storage"]
-  gateway --> local["local CAS"]
+v0.0.6 makes it SDK-only. Core has no HTTP server, CLI, daemon, persistent
+ArcTable/KV/CAS implementation, UnixFS application, or evaluator. Algorithms
+consume a narrow injected ArcSet materializer capability instead of defining
+how an ArcTable is stored.
+
+### Gateway
+
+[`DeWebProtocol/gateway`](https://github.com/DeWebProtocol/gateway) embeds the
+untrusted core executor and owns persistent ArcTable/KV/CAS, generic
+resolve/read/root/mutation/CAS routes, HTTP policy, and future managed-service
+integrations. Diagnostic `/verify` endpoints never replace client-local
+verification.
+
+### Native client
+
+[`DeWebProtocol/malt-client`](https://github.com/DeWebProtocol/malt-client) is
+the public trusted CLI and local daemon application. It owns accepted/candidate
+root policy, gateway transport, UnixFS paths/manifests/materialization, local
+ProofList verification, and payload-byte binding. It currently tracks core
+v0.0.6 and intentionally has no release tag yet.
+
+### Browser client
+
+[`DeWebProtocol/malt-web`](https://github.com/DeWebProtocol/malt-web) is the
+browser client, public website, and explanatory documentation. It uses generic
+gateway resolve/read/CAS operations and verifies with a WASM build whose
+provenance is pinned to the v0.0.6 release commit.
+
+## Operations and Trust
+
+```text
+Resolve(root, segments) -> target + ProofList
+Read(root, typedQuery) -> result + ProofList
+ApplyMutation(baseRoot, semanticMutation) -> candidateRoot + receipt
 ```
 
-`gateway` is the active managed service repository. Standalone `malt-cli` and
-`malt-ts` are still planned product surfaces.
+Resolve and read are locally verifiable. MALT v0.0.6 does not claim a
+delta/state-transition proof: a gateway-produced root remains a candidate until
+the user explicitly accepts it or an independent publication policy establishes
+trust.
+
+Root freshness, rollback prevention, multi-writer arbitration, tenant policy,
+quota, pinning, garbage collection, and production deployment remain outside
+the core authentication semantics.
+
+## UnixFS and Future Applications
+
+UnixFS is one client application over generic map/list/CAS composition, not a
+core layout. `/` parsing, manifests, file chunk/range behavior, and
+`flat`/`hierarchical` materialization strategies belong to clients.
+
+Future TypeScript object support will follow the same rule: `malt-ts` will map
+JavaScript/TypeScript application objects into segment arrays and semantic
+operations while reusing core schemas and verification semantics.
 
 ## Repositories
 
 | Repository | Role | Status |
-| --- | --- | --- |
-| [`malt`](https://github.com/DeWebProtocol/malt) | Core semantics, portable verifier, resolve/read schemas, frozen artifact compatibility, UnixFS application, runtime/CLI, benchmarks, and evaluation | Experimental `v0.0.5` source release |
-| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Public website, gateway-backed browser App, conceptual documentation, and user-facing design narrative | v0.0.5 integration with client-local verifier |
-| [`gateway`](https://github.com/DeWebProtocol/gateway) | Private managed gateway boundary with separate executor, diagnostic resolve/read verification, and UnixFS application capabilities | Pins v0.0.5; runnable local product; production policy incomplete |
-| `malt-cli` | Standalone filesystem client, local runtime, and synchronization bridge | Planned |
-| `malt-ts` | TypeScript SDK for persistent and verifiable application objects | Planned |
+|---|---|---|
+| [`malt`](https://github.com/DeWebProtocol/malt) | SDK-only authentication core, normative contracts, schemas, MIPs, verifier | Experimental `v0.0.6` |
+| [`gateway`](https://github.com/DeWebProtocol/gateway) | ArcTable/KV/CAS materialization, generic HTTP service, managed-service boundary | Pins v0.0.6; product hardening ongoing |
+| [`malt-client`](https://github.com/DeWebProtocol/malt-client) | Trusted native CLI/daemon and UnixFS client | Public initial implementation; no tag yet |
+| [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Browser client, public website, tutorials, conceptual docs | v0.0.6 generic gateway/WASM integration |
 
-Planned repositories are listed to describe the intended project structure.
+## Status
 
-## Documentation Ownership
+MALT remains experimental, pre-v1, and unaudited. APIs may change. The current
+validated path includes core test/vet/build, gateway and client test/vet/build,
+browser tests/build, local WASM provenance, and a local
+CAS -> gateway -> trusted-client candidate/accept/resolve smoke.
 
-The `malt` repository owns implementation-bound specifications, schemas, wire
-formats, API behavior, test vectors, evaluation documentation, and MIPs under
-`docs/mips`. `gateway` owns managed service behavior: tenants, identity,
-authorization, backend orchestration, root publication, cache policy, and
-deployment concerns. `malt-web` owns conceptual explanations, tutorials,
-product narratives, and user-facing documentation. We do not maintain a
-separate `malt-docs` repository today.
+Next priorities are language-neutral conformance vectors, a maintained product
+E2E suite, mutation transition semantics, native client packaging, a future
+TypeScript client, and paper-grade evaluation outside SDK core.
 
-## Getting Started
+## Documentation
 
-- To understand the protocol, object model, proof semantics, and research
-  artifact, start with [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
-  and the [`v0.0.5` release notes](https://github.com/DeWebProtocol/malt/releases/tag/v0.0.5).
-- To read the public website and documentation source, see
-  [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web).
-- To run or design a hosted service, start with MALT's public
-  [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary).
-  The managed `gateway` repository is private but now provides the working
-  local resolve/read/content path used by `malt-web`.
-- To synchronize local files, follow the planned `malt-cli` work.
-- To define verifiable application objects in TypeScript, follow the planned
-  `malt-ts` work.
-
-## Research and Evaluation
-
-MALT is developed as both a systems research project and an experimental
-reference implementation. The core repository contains benchmarks, evaluation
-workloads, and reproducibility artifacts for studying traversal latency, proof
-size, and rewrite amplification in authenticated object graphs.
-
-We avoid claiming production readiness, audit status, deployment scale, or
-performance numbers unless they are backed by the current repositories.
-
-## Contributing
-
-Useful contribution areas include commitment backends, storage adapters, IPLD
-and CID codecs, SDKs, test vectors, benchmarks, documentation, local-first
-synchronization, and security review.
-
-Before opening a pull request, check the target repository's README and local
-contribution notes. Protocol, encoding, wire-format, or proof changes should
-include tests and, when applicable, cross-language test vectors.
+- Normative protocol, schema, proof, CID, compatibility, and MIP documentation:
+  [`malt/docs`](https://github.com/DeWebProtocol/malt/tree/main/docs)
+- Gateway service behavior: [`gateway`](https://github.com/DeWebProtocol/gateway)
+- Public explanation and tutorials: [`malt-web`](https://github.com/DeWebProtocol/malt-web)
 
 Security issues should not be reported through public issues. See
 [SECURITY.md](https://github.com/DeWebProtocol/.github/blob/main/SECURITY.md)
-for the current reporting guidance.
+for reporting guidance.
