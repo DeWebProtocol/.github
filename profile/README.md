@@ -72,11 +72,9 @@ root policy, gateway transport, UnixFS paths/manifests/materialization, local
 ProofList verification, and payload-byte binding. It also provides
 IPFS-compatible Merkle DAG UnixFS import as a distinct compatibility target.
 That path returns a DAG CID, not a MALT root or ProofList. The client currently
-tracks core v0.0.6 and intentionally has no release tag yet. The active
-[boundary refactor PR #3](https://github.com/DeWebProtocol/malt-client/pull/3)
-separates untrusted transport, accepted-root policy, UnixFS behavior, and
-Merkle DAG compatibility into independently reviewable packages; those package
-paths are not described as merged until that PR lands.
+tracks core v0.0.6 and intentionally has no release tag yet. Its merged boundary
+split separates untrusted transport, accepted-root policy, UnixFS behavior, and
+Merkle DAG compatibility into independently reviewable packages.
 
 ### Browser client
 
@@ -122,7 +120,7 @@ operations while reusing core schemas and verification semantics.
 |---|---|---|
 | [`malt`](https://github.com/DeWebProtocol/malt) | SDK-only authentication core, normative contracts, schemas, MIPs, verifier | Experimental `v0.0.6` |
 | [`gateway`](https://github.com/DeWebProtocol/gateway) | ArcTable/KV/CAS materialization, generic HTTP service, managed-service boundary | Pins v0.0.6; product hardening ongoing |
-| [`malt-client`](https://github.com/DeWebProtocol/malt-client) | Trusted native CLI/daemon, MALT-authenticated UnixFS, Merkle DAG UnixFS compatibility import | No tag; boundary refactor is draft PR #3 |
+| [`malt-client`](https://github.com/DeWebProtocol/malt-client) | Trusted native CLI/daemon, MALT-authenticated UnixFS, Merkle DAG UnixFS compatibility import | No tag; boundary split is on `main` |
 | [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Browser client, public website, tutorials, conceptual docs | v0.0.6 generic gateway/WASM integration |
 
 ## Status
@@ -132,10 +130,11 @@ validated path includes core test/vet/build, gateway and client test/vet/build,
 browser tests/build, local WASM provenance, and a local
 CAS -> gateway -> trusted-client candidate/accept/resolve smoke.
 
-The immediate integration work is to review the client boundary update and
-[core-boundary documentation PR #168](https://github.com/DeWebProtocol/malt/pull/168).
-After those land, priorities are language-neutral conformance vectors, mutation
-transition semantics, native client packaging, and a future TypeScript client.
+The repository-boundary migrations are merged. The current integration work is
+to tighten public Gateway contracts, extract reusable client application
+services, strengthen cross-repository parity checks, and then expand
+language-neutral conformance vectors. Mutation transition semantics, native
+client packaging, and a future TypeScript client follow those boundaries.
 
 ## Documentation
 
