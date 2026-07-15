@@ -119,7 +119,7 @@ operations while reusing core schemas and verification semantics.
 | Repository | Role | Status |
 |---|---|---|
 | [`malt`](https://github.com/DeWebProtocol/malt) | SDK-only authentication core, normative contracts, schemas, MIPs, verifier | Experimental `v0.0.6` |
-| [`gateway`](https://github.com/DeWebProtocol/gateway) | ArcTable/KV/CAS materialization, generic HTTP service, managed-service boundary | Pins v0.0.6; product hardening ongoing |
+| [`gateway`](https://github.com/DeWebProtocol/gateway) | ArcTable/KV/CAS materialization, generic HTTP service, managed-service boundary | Merged boundary baseline; product hardening ongoing |
 | [`malt-client`](https://github.com/DeWebProtocol/malt-client) | Trusted native CLI/daemon, MALT-authenticated UnixFS, Merkle DAG UnixFS compatibility import | No tag; boundary split is on `main` |
 | [`malt-web`](https://github.com/DeWebProtocol/malt-web) | Browser client, public website, tutorials, conceptual docs | v0.0.6 generic gateway/WASM integration |
 
@@ -127,14 +127,15 @@ operations while reusing core schemas and verification semantics.
 
 MALT remains experimental, pre-v1, and unaudited. APIs may change. The current
 validated path includes core test/vet/build, gateway and client test/vet/build,
-browser tests/build, local WASM provenance, and a local
-CAS -> gateway -> trusted-client candidate/accept/resolve smoke.
+browser tests/build, local WASM provenance, and pinned-client
+CAS -> gateway -> trusted-client Product E2E coverage.
 
-The repository-boundary migrations are merged. The current integration work is
-to tighten public Gateway contracts, extract reusable client application
-services, strengthen cross-repository parity checks, and then expand
-language-neutral conformance vectors. Mutation transition semantics, native
-client packaging, and a future TypeScript client follow those boundaries.
+The repository-boundary migrations, public Gateway contract cleanup, reusable
+client application services, and cross-repository parity guards are merged.
+The next implementation layer is language-neutral Resolve/Read conformance,
+a stronger real-product E2E matrix, and the first native-client packaging
+contract. Mutation transition semantics and a future TypeScript client follow
+those verification foundations.
 
 ## Documentation
 
