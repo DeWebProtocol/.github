@@ -3,7 +3,8 @@
 DeWebProtocol works on verifiable data structures, object references, storage
 adapters, and cloud-facing services. Security reports may affect proof
 verification, serialization, CID and multicodec handling, authentication,
-tenant isolation, storage adapters, caching, or synchronization behavior.
+tenant/Bucket isolation, client-root materialization, storage adapters,
+caching, or synchronization behavior.
 
 ## Reporting a Vulnerability
 
@@ -24,7 +25,8 @@ Please include:
 - a description of the vulnerability and its impact;
 - reproduction steps or a proof of concept, if safe to share privately;
 - whether the issue affects proof verification, serialization, CID codecs,
-  authentication, tenant isolation, storage adapters, caching, or sync behavior;
+  authentication, tenant/Bucket isolation, client-root materialization, storage
+  adapters, caching, or sync behavior;
 - any known mitigations or configuration constraints;
 - whether you believe the issue is being actively exploited.
 
@@ -34,13 +36,17 @@ Security-sensitive areas include:
 
 - proof generation and proof verification;
 - MALT root handling and trusted-root assumptions;
+- client-root update-view, bundle, exact-candidate, and materialization-receipt
+  binding;
 - deterministic serialization and canonical encoding;
 - CID, multicodec, and path encoding;
 - commitment backends and explicit arc handling;
 - storage adapters for CAS, object storage, IPFS, Filecoin, and local stores;
-- cloud authentication, project isolation, namespace isolation, and API keys;
+- cloud authentication, tenant/Bucket ACL isolation, ref compare-and-swap,
+  conflict-branch preservation, and API keys;
 - cache correctness and stale data handling;
-- local daemon, filesystem sync, and future SDK behavior.
+- local daemon, stash-before-pull recovery, filesystem sync, and future SDK
+  behavior.
 
 ## Audit Status
 

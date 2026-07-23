@@ -12,19 +12,22 @@ that focus clear and should distinguish implemented behavior from future plans.
   implementation-bound MIPs.
 - Use [`dewebprotocol/malt-client`](https://github.com/DeWebProtocol/malt-client)
   for native CLI/daemon, trusted-root policy, UnixFS application behavior,
-  gateway transport, client payload verification, and IPFS-compatible Merkle
-  DAG UnixFS import.
+  gateway transport, managed-Bucket synchronization, client-root application
+  integration, client payload verification, and IPFS-compatible Merkle DAG
+  UnixFS import.
 - Use [`dewebprotocol/malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
   for benchmark runners, comparison adapters, evaluation schemas/plans,
-  reproducibility tooling, and research-grade result generation. Its historical
-  runner intentionally pins MALT v0.0.5; current v0.0.6 product E2E belongs to
-  `gateway`.
+  executable paper suites, reproducibility tooling, and research-grade result
+  generation. The repository root is the only active evaluator module; the
+  former v0.0.5 evaluator is retained in Git history only. Product correctness
+  E2E belongs to `gateway`.
 - Use [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web) for
   the public website and documentation site.
 - Managed gateway service behavior, tenants, identity, authorization, root
-  publication, backend orchestration, cache policy, S3/Filecoin/IPFS
-  integration, and product-level end-to-end tests belong to the private
-  `gateway` service. Its current integration pins MALT v0.0.6 and owns the
+  publication, managed Bucket ACL/commit/ref synchronization, backend
+  orchestration, cache policy, S3/Filecoin/IPFS integration, deployment, and
+  product-level end-to-end tests belong to the private `gateway` service. Its
+  current integration pins an exact post-release MALT revision and owns the
   generic resolve/read/root/CAS product integration. Start with MALT's public
   [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary);
   contributors without private access can open a scoped design issue in
@@ -67,6 +70,9 @@ A useful feature proposal should explain:
 - how the design preserves verifiability and storage independence;
 - compatibility impact on existing data, APIs, encodings, proofs, or test
   vectors;
+- whether a proposed write path affects client-computed candidates,
+  materialization receipts, Bucket refs, publication, or client trust, and how
+  those distinct boundaries remain separate;
 - alternatives considered and why they are not sufficient;
 - any open research, security, or performance questions.
 
@@ -88,6 +94,10 @@ Before opening a pull request:
 Protocol, encoding, wire-format, proof, or commitment changes should include
 tests and, when applicable, cross-language test vectors. Changes that affect
 benchmarks or evaluation artifacts should keep reproduction steps clear.
+Managed-Bucket changes should test concurrent clients, stash-before-pull
+recovery, exact candidate/base preservation, ref compare-and-swap, and the rule
+that only `status: "branched"` makes HTTP 409 a successful preservation
+outcome.
 
 ## Testing
 

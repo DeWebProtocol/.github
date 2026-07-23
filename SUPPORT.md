@@ -10,16 +10,18 @@ searchable, and actionable for the project.
   core implementation:
   [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
 - Benchmark runners, comparison adapters, evaluation plans, reproducibility,
-  and research results:
+  executable paper suites, and research results:
   [`dewebprotocol/malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
 - Public website and documentation site:
   [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web)
 - Native CLI/daemon, trusted roots, MALT-authenticated UnixFS, IPFS-compatible
-  Merkle DAG UnixFS import, and client payload verification:
+  Merkle DAG UnixFS import, managed-Bucket stash/pull/push synchronization,
+  client-root application integration, and client payload verification:
   [`dewebprotocol/malt-client`](https://github.com/DeWebProtocol/malt-client)
 - Managed gateway service behavior, tenants, identity, authorization, backend
-  orchestration, S3/Filecoin/IPFS integration, and product end-to-end tests:
-  the private `gateway` service. If you do not have access, use MALT's
+  orchestration, Bucket ACL/commit/ref behavior, S3/Filecoin/IPFS integration,
+  deployment, and product end-to-end tests: the private `gateway` service. If
+  you do not have access, use MALT's
   public [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary)
   to choose the closest public issue location.
 - Organization profile, community files, and repository routing:
