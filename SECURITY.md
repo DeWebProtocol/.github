@@ -3,8 +3,9 @@
 DeWebProtocol works on verifiable data structures, object references, storage
 adapters, and cloud-facing services. Security reports may affect proof
 verification, serialization, CID and multicodec handling, authentication,
-tenant/Bucket isolation, client-root materialization, storage adapters,
-caching, or synchronization behavior.
+browser sessions, Passkey/WebAuthn ceremonies, tenant/Bucket isolation,
+client-root materialization, quota accounting, initialization or migration,
+storage adapters, caching, or synchronization behavior.
 
 ## Reporting a Vulnerability
 
@@ -25,8 +26,9 @@ Please include:
 - a description of the vulnerability and its impact;
 - reproduction steps or a proof of concept, if safe to share privately;
 - whether the issue affects proof verification, serialization, CID codecs,
-  authentication, tenant/Bucket isolation, client-root materialization, storage
-  adapters, caching, or sync behavior;
+  authentication, browser sessions, Passkey/WebAuthn, tenant/Bucket isolation,
+  client-root materialization, initialization/migration, quota reservations,
+  storage adapters, caching, or sync behavior;
 - any known mitigations or configuration constraints;
 - whether you believe the issue is being actively exploited.
 
@@ -42,8 +44,15 @@ Security-sensitive areas include:
 - CID, multicodec, and path encoding;
 - commitment backends and explicit arc handling;
 - storage adapters for CAS, object storage, IPFS, Filecoin, and local stores;
-- cloud authentication, tenant/Bucket ACL isolation, ref compare-and-swap,
-  conflict-branch preservation, and API keys;
+- cloud authentication, account provisioning, password handling,
+  Passkey/WebAuthn ceremonies, session cookies, origin/CSRF enforcement, and
+  administrator authorization;
+- tenant/Bucket ACL isolation, ref compare-and-swap, conflict-branch
+  preservation, and API keys;
+- tier enforcement, quota reservation/commit/reconciliation, and cross-tenant
+  accounting isolation;
+- explicit service initialization, configuration and secret-file handling,
+  legacy-state adoption, migration, and rollback;
 - cache correctness and stale data handling;
 - local daemon, stash-before-pull recovery, filesystem sync, and future SDK
   behavior.
