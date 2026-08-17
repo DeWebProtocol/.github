@@ -6,12 +6,12 @@ that focus clear and should distinguish implemented behavior from future plans.
 
 ## Choosing a Repository
 
-- Use [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt) for protocol
+- Use [`dewebprotocol/malt-core`](https://github.com/DeWebProtocol/malt-core) for protocol
   semantics, MALT objects, explicit arcs, structure commitments, path encoding,
   CIDs, multicodecs, commitment backends, proofs, verification, schemas, and
   implementation-bound MIPs.
-- Use [`dewebprotocol/malt-client`](https://github.com/DeWebProtocol/malt-client)
-  for native CLI/daemon, trusted-root policy, UnixFS application behavior,
+- Use [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
+  for the local runtime, CLI/daemon, trusted-root policy, UnixFS application behavior,
   gateway transport, managed-Bucket synchronization, client-root application
   integration, client payload verification, and IPFS-compatible Merkle DAG
   UnixFS import.
@@ -27,13 +27,13 @@ that focus clear and should distinguish implemented behavior from future plans.
   publication, managed Bucket ACL/commit/ref synchronization, backend
   orchestration, cache policy, S3/Filecoin/IPFS integration, deployment, and
   product-level end-to-end tests belong to the private `gateway` service. Its
-  current integration pins an exact post-release MALT revision and owns the
+  current integration pins exact `malt-core v0.0.7` and owns the
   generic resolve/read/root/CAS product integration. Start with MALT's public
-  [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary);
+  [repository boundary](https://github.com/DeWebProtocol/malt-core#repository-boundary);
   contributors without private access can open a scoped design issue in
-  `dewebprotocol/malt` for routing.
+  `dewebprotocol/malt-core` for routing.
 - TypeScript client/SDK work remains planned as `malt-ts`; discuss its
-  cross-language contract work in `malt` until that repository exists.
+  cross-language contract work in `malt-core` until that repository exists.
 
 If you are unsure where a change belongs, open a short design issue before
 starting implementation.

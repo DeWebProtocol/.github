@@ -8,27 +8,27 @@ searchable, and actionable for the project.
 
 - Protocol behavior, object model, explicit arcs, proofs, verification, and
   core implementation:
-  [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
+  [`dewebprotocol/malt-core`](https://github.com/DeWebProtocol/malt-core)
 - Benchmark runners, comparison adapters, evaluation plans, reproducibility,
   executable paper suites, and research results:
   [`dewebprotocol/malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
 - Public website and documentation site:
   [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web)
-- Native CLI/daemon, trusted roots, MALT-authenticated UnixFS, IPFS-compatible
+- Local runtime, CLI/daemon, trusted roots, MALT-authenticated UnixFS, IPFS-compatible
   Merkle DAG UnixFS import, managed-Bucket stash/pull/push synchronization,
   client-root application integration, and client payload verification:
-  [`dewebprotocol/malt-client`](https://github.com/DeWebProtocol/malt-client)
+  [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
 - Managed gateway service behavior, tenants, identity, authorization, backend
   orchestration, Bucket ACL/commit/ref behavior, S3/Filecoin/IPFS integration,
   deployment, and product end-to-end tests: the private `gateway` service. If
   you do not have access, use MALT's
-  public [repository boundary](https://github.com/DeWebProtocol/malt#repository-boundary)
+  public [repository boundary](https://github.com/DeWebProtocol/malt-core#repository-boundary)
   to choose the closest public issue location.
 - Organization profile, community files, and repository routing:
   [`dewebprotocol/.github`](https://github.com/DeWebProtocol/.github)
 
 The future `malt-ts` repository is not linked until it exists. Until then, use
-`malt` for cross-language protocol/schema questions.
+`malt-core` for cross-language protocol/schema questions.
 
 ## Bugs
 
