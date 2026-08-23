@@ -27,7 +27,7 @@ that focus clear and should distinguish implemented behavior from future plans.
   publication, managed Bucket ACL/commit/ref synchronization, backend
   orchestration, cache policy, S3/Filecoin/IPFS integration, deployment, and
   product-level end-to-end tests belong to the private `gateway` service. Its
-  current integration pins exact `malt-core v0.0.7` and owns the
+  current integration pins exact `malt-core v0.0.8` and owns the
   generic resolve/read/root/CAS product integration. Start with MALT's public
   [repository boundary](https://github.com/DeWebProtocol/malt-core#repository-boundary);
   contributors without private access can open a scoped design issue in
