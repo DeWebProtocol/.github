@@ -12,7 +12,7 @@ authority for data integrity or structure.
 
 MALT is a user-controlled local data runtime backed by an application-neutral,
 arc-granularity authentication Core. The current experimental Core release is
-[`malt-core v0.0.7`](https://github.com/DeWebProtocol/malt-core/releases/tag/v0.0.7).
+[`malt-core v0.0.8`](https://github.com/DeWebProtocol/malt-core/releases/tag/v0.0.8).
 It includes language-neutral Resolve/Read, Map-proof, and client-root
 conformance corpora plus the complete-view client-root writer contract.
 
@@ -40,7 +40,7 @@ flowchart TB
   native["malt: local runtime / daemon / CLI / UnixFS"] --> gateway["gateway: optional managed Buckets + HTTP + ArcTable + KV + CAS"]
   console["gateway/console: managed account + Bucket UI"] --> gateway
   future["future malt-ts / application clients"] --> gateway
-  gateway --> core["malt-core v0.0.7 authentication SDK"]
+  gateway --> core["malt-core v0.0.8 authentication SDK"]
   gateway --> result["result + ProofList + CAS bytes"]
   result --> local["client-local Go / WASM verification"]
   trusted["caller-selected trusted root"] --> local
@@ -57,7 +57,7 @@ graph/root/CID values, resolve/read/mutation contracts and schemas, commitment
 backends, map/list algorithms, ProofLists, generic execution composition, and
 local Go/WASM verification.
 
-v0.0.7 is SDK-only. Core has no HTTP server, CLI, daemon, persistent
+v0.0.8 is SDK-only. Core has no HTTP server, CLI, daemon, persistent
 ArcTable/KV/CAS implementation, UnixFS application, or evaluator. Algorithms
 consume narrow injected ArcSet lookup/update/snapshot capabilities instead of
 defining how an ArcTable is stored. Core also owns canonical
@@ -110,6 +110,15 @@ boundary split separates untrusted transport, accepted-root
 policy, UnixFS behavior, and Merkle DAG compatibility into independently
 reviewable packages.
 
+CLI, daemon, and foreground flows share reusable application/runtime services.
+URL-free semantic transport capabilities isolate Gateway HTTP from the
+application and filesystem layers. The CAS plane supports Gateway, bounded
+durable local, and Gateway-primary verified hybrid policies. On Linux, the
+daemon can expose a locally accepted Bucket view through FUSE, read-only by
+default or with an explicit write-back policy; candidate computation and
+accepted-root promotion remain separate after remote success. Peer networking
+and non-Linux mount adapters remain future work.
+
 The runtime also owns durable managed-Bucket synchronization state. It
 stages the exact candidate and original base before fetching a newer remote
 head, preserves that stash across retries, and keeps Bucket synchronization
@@ -155,7 +164,7 @@ ComputeClientRoot(verifiedUpdateView, semanticIntent) -> candidateRoot + bundle
 PushBucket(stashedBase, candidateRoot) -> fast_forward | merged | branched
 ```
 
-Resolve and read are locally verifiable. MALT Core v0.0.7 does not claim a
+Resolve and read are locally verifiable. MALT Core v0.0.8 does not claim a
 delta/state-transition proof. The client-root writer lets a
 trusted client verify complete consumed state and compute the candidate before
 submission, while Gateway defensively replays and materializes that exact
@@ -188,7 +197,7 @@ operations while reusing core schemas and verification semantics.
 
 | Repository | Role | Status |
 |---|---|---|
-| [`malt-core`](https://github.com/DeWebProtocol/malt-core) | SDK-only authentication core, normative contracts, schemas, MIPs, verifier | Experimental `v0.0.7`; language-neutral Resolve/Read, Map-proof, and client-root corpora |
+| [`malt-core`](https://github.com/DeWebProtocol/malt-core) | SDK-only authentication core, normative contracts, schemas, MIPs, verifier | Experimental `v0.0.8`; language-neutral Resolve/Read, Map-proof, and client-root corpora |
 | [`gateway`](https://github.com/DeWebProtocol/gateway) | ArcTable/KV/CAS materialization, generic HTTP, managed accounts/Buckets, same-origin Console, product E2E | Sessions, Passkeys, tiers, quota enforcement, explicit initialization/migration, and single-node deployment on `main` |
 | [`malt`](https://github.com/DeWebProtocol/malt) | User-controlled local runtime, CLI/daemon, Bucket sync, MALT-authenticated UnixFS, Merkle DAG import | No tag; repository renamed while its Go module temporarily remains `github.com/dewebprotocol/malt-client` |
 | [`malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation) | Current-core/current-product workloads, executable paper suites, plans, schemas, and result provenance | Section 5 RQ1-RQ4 infrastructure implemented; campaign plan intentionally unfrozen and no paper results checked in |
@@ -204,11 +213,12 @@ and pinned-client CAS -> gateway -> trusted-client Product E2E coverage.
 The repository-boundary migration, Resolve/Read conformance corpus, managed
 Bucket synchronization, complete-view client-root contract, and executable
 Section 5 RQ1-RQ4 paper-evaluation infrastructure are merged. MALT remains
-experimental: publication-quality paper campaigns are still unfrozen, the
-ordinary native write UX is not yet generally migrated to client-root
-computation, and multi-instance Gateway control-plane safety, full resource
-governance and production hardening, client packaging, an independent
-transition-proof contract, and a future TypeScript client remain open.
+experimental: publication-quality paper campaigns are still unfrozen, native
+writes outside the explicit mounted write-back path are not yet generally
+migrated to client-root computation, and multi-instance Gateway control-plane
+safety, full resource governance and production hardening, client packaging,
+peer networking/non-Linux mounts, an independent transition-proof contract,
+and a future TypeScript client remain open.
 
 ## Documentation
 
