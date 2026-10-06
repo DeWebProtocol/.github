@@ -130,7 +130,7 @@ dependencies, packaged assets, and deployed services are separate facts.
 | Core | Latest published prerelease: [`v0.0.10-rc.3`](https://github.com/DeWebProtocol/malt-core/releases/tag/v0.0.10-rc.3) |
 | TypeScript SDK | Source version `0.0.3-rc.3`; [Core lock](https://github.com/DeWebProtocol/malt-ts/blob/21d438d47045178c23844c76cef1ee6b2b75964c/malt-core.lock.json) binds published Core rc.3 |
 | Runtime and Gateway | [Runtime](https://github.com/DeWebProtocol/malt/blob/44bd537d50bb49e74c0a01d274890e9af43de3a0/go.mod) and [Gateway](https://github.com/DeWebProtocol/gateway/blob/c059bea7a179e3c1f7f7ae740d6fb1d50a63cc59/go.mod) source dependencies pin Core rc.3 |
-| Public website verifier | [Checked-in asset lock](https://github.com/DeWebProtocol/malt-web/blob/ac2a60b937b5fce547136d73bcc2d5a55512cd0b/verifier-source.json) still binds SDK `0.0.3-rc.2` and Core `v0.0.10-rc.2` |
+| Public website verifier | [Checked-in asset lock](https://github.com/DeWebProtocol/malt-web/blob/a4d28d85d3c6aa49acdff59837bc0aed7c20d3fd/verifier-source.json) binds SDK `0.0.3-rc.3` and Core `v0.0.10-rc.3`, matching Console's SDK source pin |
 
 A browser verifier's compatibility follows its packaged assets, provenance,
 and checksums. Updating Core or a dependency manifest does not update an
@@ -156,7 +156,7 @@ historical artifacts keep their original experiment identities.
   and [specifications](https://github.com/DeWebProtocol/malt-core/blob/main/docs/spec/README.md)
 - [TypeScript/browser usage](https://github.com/DeWebProtocol/malt-ts#readme)
 - [Local runtime Go API](https://github.com/DeWebProtocol/malt/blob/main/docs/go-api.md)
-- [Public website and tutorials](https://github.com/DeWebProtocol/malt-web#readme)
+- [Public website and tutorials](https://dewebprotocol.github.io/malt-web/)
 - [Contributing](https://github.com/DeWebProtocol/.github/blob/main/CONTRIBUTING.md)
   and [support](https://github.com/DeWebProtocol/.github/blob/main/SUPPORT.md)
 
