@@ -6,34 +6,41 @@ that focus clear and should distinguish implemented behavior from future plans.
 
 ## Choosing a Repository
 
-- Use [`dewebprotocol/malt-core`](https://github.com/DeWebProtocol/malt-core) for protocol
-  semantics, MALT objects, explicit arcs, structure commitments, path encoding,
-  CIDs, multicodecs, commitment backends, proofs, verification, schemas, and
-  implementation-bound MIPs.
-- Use [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
-  for the local runtime, CLI/daemon, trusted-root policy, UnixFS application behavior,
-  gateway transport, managed-Bucket synchronization, client-root application
-  integration, client payload verification, and IPFS-compatible Merkle DAG
-  UnixFS import.
-- Use [`dewebprotocol/malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
-  for benchmark runners, comparison adapters, evaluation schemas/plans,
-  executable paper suites, reproducibility tooling, and research-grade result
-  generation. The repository root is the only active evaluator module; the
-  former v0.0.5 evaluator is retained in Git history only. Product correctness
-  E2E belongs to `gateway`.
-- Use [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web) for
-  the public website and documentation site.
+- Use [`malt-core`](https://github.com/DeWebProtocol/malt-core) for authentication
+  semantics, Root/CID rules, coordinate derivation, commitment backends, typed
+  queries, verification, candidates and batches, schemas, conformance, the Go
+  Object SDK, and implementation-bound MIPs.
+- Use [`malt-ts`](https://github.com/DeWebProtocol/malt-ts) for the supported
+  JavaScript/TypeScript API, declarations, browser Workers, reproducible WASM
+  assets, package distribution, and bundler integration. Core remains normative
+  for the authentication semantics those assets execute.
+- Use [`malt`](https://github.com/DeWebProtocol/malt) for the local runtime,
+  CLI/daemon, accepted/candidate Root policy, public Node API, Gateway transport,
+  UnixFS and encrypted backup behavior, synchronization, payload verification,
+  and IPFS-compatible Merkle DAG import.
+- Use [`malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
+  (private; access required) for experiment runners, comparison adapters,
+  plans, schemas, raw-artifact analysis, and result provenance. The repository
+  root is the only active evaluator module. Product correctness E2E belongs to
+  `gateway`; historical results keep their original source and experiment pins.
+- Use [`malt-web`](https://github.com/DeWebProtocol/malt-web) for public
+  explanations, tutorials, the documentation site, and public verification tools.
 - Managed gateway service behavior, tenants, identity, authorization, root
   publication, managed Bucket ACL/commit/ref synchronization, backend
   orchestration, cache policy, S3/Filecoin/IPFS integration, deployment, and
-  product-level end-to-end tests belong to the private `gateway` service. Its
-  current integration pins exact `malt-core v0.0.8` and owns the
-  generic resolve/read/root/CAS product integration. Start with MALT's public
-  [repository boundary](https://github.com/DeWebProtocol/malt-core#repository-boundary);
-  contributors without private access can open a scoped design issue in
-  `dewebprotocol/malt-core` for routing.
-- TypeScript client/SDK work remains planned as `malt-ts`; discuss its
-  cross-language contract work in `malt-core` until that repository exists.
+  product-level end-to-end tests belong to the private
+  [`gateway`](https://github.com/DeWebProtocol/gateway) service. It implements
+  the public Node API and owns the managed Console. Changes to authorization
+  must cover both in-process service calls and HTTP adapters.
+- Use [`.github`](https://github.com/DeWebProtocol/.github) for the organization
+  profile, default community files, and non-confidential repository-routing
+  questions, including when a relevant repository requires private access.
+
+Start with the public [integration boundaries](https://github.com/DeWebProtocol/malt-core/blob/main/ARCHITECTURE.md#packages-and-integration-boundaries)
+and [Node API](https://github.com/DeWebProtocol/malt/blob/main/docs/node-api.md)
+when a change spans repositories. Keep protocol contracts in Core, browser
+distribution in `malt-ts`, and service or application policy in its owning
+repository. Public explanations should link to these sources of truth.
 
 If you are unsure where a change belongs, open a short design issue before
 starting implementation.
@@ -70,9 +77,9 @@ A useful feature proposal should explain:
 - how the design preserves verifiability and storage independence;
 - compatibility impact on existing data, APIs, encodings, proofs, or test
   vectors;
-- whether a proposed write path affects client-computed candidates,
-  materialization receipts, Bucket refs, publication, or client trust, and how
-  those distinct boundaries remain separate;
+- whether a proposed write path affects locally computed candidates, ordered
+  batches, materialization receipts, observed heads, publication, or local Root
+  acceptance, and how those distinct boundaries remain separate;
 - alternatives considered and why they are not sufficient;
 - any open research, security, or performance questions.
 
@@ -94,10 +101,16 @@ Before opening a pull request:
 Protocol, encoding, wire-format, proof, or commitment changes should include
 tests and, when applicable, cross-language test vectors. Changes that affect
 benchmarks or evaluation artifacts should keep reproduction steps clear.
+Browser SDK releases must bind an exact published Core release and verify
+artifact provenance and checksums. Cross-repository API changes should check
+the selected consumer revisions and direct/HTTP capability parity.
 Managed-Bucket changes should test concurrent clients, stash-before-pull
 recovery, exact candidate/base preservation, ref compare-and-swap, and the rule
 that only `status: "branched"` makes HTTP 409 a successful preservation
 outcome.
+
+Keep MALT-owned package and repository release versions on `v0.0.x` until
+Core publishes `v0.1.0`. Third-party dependency versions are independent.
 
 ## Testing
 

@@ -6,35 +6,44 @@ searchable, and actionable for the project.
 
 ## Where to Ask
 
-- Protocol behavior, object model, explicit arcs, proofs, verification, and
-  core implementation:
-  [`dewebprotocol/malt-core`](https://github.com/DeWebProtocol/malt-core)
-- Benchmark runners, comparison adapters, evaluation plans, reproducibility,
-  executable paper suites, and research results:
-  [`dewebprotocol/malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
-- Public website and documentation site:
-  [`dewebprotocol/malt-web`](https://github.com/DeWebProtocol/malt-web)
-- Local runtime, CLI/daemon, trusted roots, MALT-authenticated UnixFS, IPFS-compatible
-  Merkle DAG UnixFS import, managed-Bucket stash/pull/push synchronization,
-  client-root application integration, and client payload verification:
-  [`dewebprotocol/malt`](https://github.com/DeWebProtocol/malt)
+- Authentication semantics, Root/CID rules, typed queries, proofs, candidates
+  and batches, verification, or the Go Object SDK:
+  [`malt-core`](https://github.com/DeWebProtocol/malt-core)
+- JavaScript/TypeScript APIs, browser Workers, verifier/writer WASM assets,
+  package installation, and bundler integration:
+  [`malt-ts`](https://github.com/DeWebProtocol/malt-ts)
+- Local runtime, CLI/daemon, trusted Roots, public Node API, UnixFS and
+  encrypted backup, Merkle DAG import, synchronization, and payload verification:
+  [`malt`](https://github.com/DeWebProtocol/malt)
+- Experiment runners, comparison adapters, plans, raw-artifact analysis,
+  reproducibility, and result provenance:
+  [`malt-evaluation`](https://github.com/DeWebProtocol/malt-evaluation)
+  (private; access required)
+- Public explanations, tutorials, website, and public verification tools:
+  [`malt-web`](https://github.com/DeWebProtocol/malt-web)
 - Managed gateway service behavior, tenants, identity, authorization, backend
   orchestration, Bucket ACL/commit/ref behavior, S3/Filecoin/IPFS integration,
-  deployment, and product end-to-end tests: the private `gateway` service. If
-  you do not have access, use MALT's
-  public [repository boundary](https://github.com/DeWebProtocol/malt-core#repository-boundary)
-  to choose the closest public issue location.
+  managed Console, deployment, and product end-to-end tests:
+  [`gateway`](https://github.com/DeWebProtocol/gateway) (private; access required)
 - Organization profile, community files, and repository routing:
-  [`dewebprotocol/.github`](https://github.com/DeWebProtocol/.github)
+  [`.github`](https://github.com/DeWebProtocol/.github)
 
-The future `malt-ts` repository is not linked until it exists. Until then, use
-`malt-core` for cross-language protocol/schema questions.
+For a question that spans repositories, start with the public
+[integration boundaries](https://github.com/DeWebProtocol/malt-core/blob/main/ARCHITECTURE.md#packages-and-integration-boundaries)
+and [Node API](https://github.com/DeWebProtocol/malt/blob/main/docs/node-api.md).
+If you do not have access to the owning repository, open a non-confidential
+routing question in [`.github`](https://github.com/DeWebProtocol/.github/issues).
 
 ## Bugs
 
 Open a GitHub issue in the affected repository. Include the command, API call,
 commit or branch, expected behavior, actual behavior, logs, and a minimal
 reproduction when possible.
+
+For browser problems, also include the SDK version and the verifier/writer
+asset provenance. A newer Core release does not change an already packaged
+browser artifact. Distinguish installed dependencies from source locks, and
+deployed service versions from repository revisions.
 
 ## Design Questions
 
