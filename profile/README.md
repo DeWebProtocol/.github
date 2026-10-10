@@ -122,15 +122,22 @@ define the current executable boundaries.
 
 ## Release and source status
 
-The following snapshot was checked on **2026-10-06**. Release tags, source
+The following snapshot was checked on **2026-10-10**. Release tags, source
 dependencies, packaged assets, and deployed services are separate facts.
 
 | Component | Inspected binding |
 | --- | --- |
-| Core | Latest published prerelease: [`v0.0.10-rc.3`](https://github.com/DeWebProtocol/malt-core/releases/tag/v0.0.10-rc.3) |
-| TypeScript SDK | Source version `0.0.3-rc.3`; [Core lock](https://github.com/DeWebProtocol/malt-ts/blob/21d438d47045178c23844c76cef1ee6b2b75964c/malt-core.lock.json) binds published Core rc.3 |
-| Runtime and Gateway | [Runtime](https://github.com/DeWebProtocol/malt/blob/44bd537d50bb49e74c0a01d274890e9af43de3a0/go.mod) and [Gateway](https://github.com/DeWebProtocol/gateway/blob/c059bea7a179e3c1f7f7ae740d6fb1d50a63cc59/go.mod) source dependencies pin Core rc.3 |
-| Public website verifier | [Checked-in asset lock](https://github.com/DeWebProtocol/malt-web/blob/a4d28d85d3c6aa49acdff59837bc0aed7c20d3fd/verifier-source.json) binds SDK `0.0.3-rc.3` and Core `v0.0.10-rc.3`, matching Console's SDK source pin |
+| Core | Published release [`v0.0.10`](https://github.com/DeWebProtocol/malt-core/releases/tag/v0.0.10), commit `aaa78737c35f82fe91bb3f749cfddbcb7953ed2b` |
+| TypeScript SDK | Source version `0.0.3`; [Core lock](https://github.com/DeWebProtocol/malt-ts/blob/5dd153926ea4387d19c19de281cfc2445fafb7db/malt-core.lock.json) binds published Core `v0.0.10`; npm publication is a separate release step |
+| Runtime | [Merged positional implementation](https://github.com/DeWebProtocol/malt/blob/b0486b9595d74c3671244c3ac50c575daef23093/go.mod) selects Core commit `949fb4e690c8`, whose complete source tree matches released `v0.0.10`; [formal-tag pin PR #70](https://github.com/DeWebProtocol/malt/pull/70) is awaiting integration |
+| Gateway | [Source dependencies](https://github.com/DeWebProtocol/gateway/blob/05d4e11646b363a76d428ba1be35c5941f03b619/go.mod) pin Core `v0.0.10` and the merged positional runtime |
+| Public website verifier | [Checked-in asset lock](https://github.com/DeWebProtocol/malt-web/blob/78002fff8b96d0d6b2f0ca8d5fcac4db1268d090/verifier-source.json) binds SDK `0.0.3` and Core `v0.0.10`; Web and Console select SDK source `735c894cb7dd4bbdfa7032c75f48f5f23820fd14` |
+
+In the positional layout, only the Root vector reserves slot zero for the
+element count and optional opaque payload CID. Child vectors use every slot;
+Core ranges use element indices, while applications bind byte geometry through
+their metadata. The evaluator migration uses new schema identities and preserves
+historical experiment pins and outputs.
 
 A browser verifier's compatibility follows its packaged assets, provenance,
 and checksums. Updating Core or a dependency manifest does not update an
